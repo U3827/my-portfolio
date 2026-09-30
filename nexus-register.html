@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Create your Nexus learning and developer platform account."
+    >
+
+    <title>Create Account | Nexus</title>
+
+    <link
+        rel="stylesheet"
+        href="nexus-register.css"
+    >
+</head>
+
+<body>
+
+    <!-- ================================
+         PAGE
+    ================================= -->
+
+    <main class="auth-page">
+
+        <!-- LEFT SIDE -->
+        <section class="auth-intro">
+
+            <a href="nexus.html" class="brand">
+                <span class="brand-icon">N</span>
+                <span>Nexus</span>
+            </a>
+
+            <div class="intro-content">
+
+                <span class="intro-badge">
+                    START YOUR JOURNEY
+                </span>
+
+                <h1>
+                    Learn.
+                    <span>Build.</span>
+                    Grow.
+                </h1>
+
+                <p>
+                    Create your Nexus account and start building
+                    your skills through structured learning,
+                    practical exercises and interactive challenges.
+                </p>
+
+                <div class="intro-points">
+
+                    <div class="intro-point">
+                        <span>01</span>
+                        <div>
+                            <strong>Learn</strong>
+                            <small>
+                                Follow structured learning paths.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="intro-point">
+                        <span>02</span>
+                        <div>
+                            <strong>Practice</strong>
+                            <small>
+                                Test your knowledge with challenges.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="intro-point">
+                        <span>03</span>
+                        <div>
+                            <strong>Progress</strong>
+                            <small>
+                                Track your development over time.
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="intro-footer">
+                © <span id="year"></span> Nexus
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT SIDE -->
+        <section class="auth-form-section">
+
+            <div class="auth-card">
+
+                <div class="mobile-brand">
+
+                    <a href="nexus.html" class="brand">
+                        <span class="brand-icon">N</span>
+                        <span>Nexus</span>
+                    </a>
+
+                </div>
+
+
+                <div class="form-header">
+
+                    <span class="form-label">
+                        CREATE ACCOUNT
+                    </span>
+
+                    <h2>
+                        Join Nexus
+                    </h2>
+
+                    <p>
+                        Create your account to start learning
+                        and building.
+                    </p>
+
+                </div>
+
+
+                <!-- REGISTRATION FORM -->
+
+                <form
+                    id="registerForm"
+                    class="register-form"
+                    novalidate
+                >
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label for="fullName">
+                            Full Name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
+
+                        <small
+                            class="error-message"
+                            id="fullNameError"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                        <small
+                            class="error-message"
+                            id="emailError"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <div class="password-strength">
+
+                            <div class="strength-bar">
+                                <span id="strengthFill"></span>
+                            </div>
+
+                            <span id="strengthText">
+                                Password strength
+                            </span>
+
+                        </div>
+
+                        <small
+                            class="error-message"
+                            id="passwordError"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="confirmPasswordToggle"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <small
+                            class="error-message"
+                            id="confirmPasswordError"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+
+                    <div class="terms-group">
+
+                        <label class="checkbox-label">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                                required
+                            >
+
+                            <span class="custom-checkbox"></span>
+
+                            <span class="terms-text">
+                                I agree to the
+                                <a href="#" onclick="return false;">
+                                    Terms of Service
+                                </a>
+                                and
+                                <a href="#" onclick="return false;">
+                                    Privacy Policy
+                                </a>.
+                            </span>
+
+                        </label>
+
+                        <small
+                            class="error-message"
+                            id="termsError"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    <button
+                        type="submit"
+                        class="create-account-btn"
+                    >
+                        <span>
+                            Create Account
+                        </span>
+
+                        <span class="arrow">
+                            →
+                        </span>
+                    </button>
+
+                    <div
+                        class="form-message"
+                        id="formMessage"
+                    ></div>
+
+                </form>
+
+
+                <!-- LOGIN -->
+
+                <div class="login-link">
+
+                    Already have an account?
+
+                    <a href="nexus-login.html">
+                        Log in
+                    </a>
+
+                </div>
+
+
+                <!-- BACK -->
+
+                <a
+                    href="nexus.html"
+                    class="back-link"
+                >
+                    ← Back to Nexus
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="nexus-register.js"></script>
+
+</body>
+                              </html>
