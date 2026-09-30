@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Usman Musa Hassan - Software & Web Developer Portfolio">
+    <meta name="author" content="Usman Musa Hassan">
+
+    <title>Usman Musa Hassan | Software & Web Developer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --bg: #07111f;
+            --bg-light: #0d1b2d;
+            --card: #101f33;
+            --text: #f5f7fa;
+            --muted: #aab7c7;
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --border: rgba(255,255,255,0.08);
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(7,17,31,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 75px;
+            background:
+                radial-gradient(circle at 80% 20%, rgba(56,189,248,0.12), transparent 30%),
+                radial-gradient(circle at 10% 80%, rgba(2,132,199,0.10), transparent 30%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .intro {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: 1.05;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero h2 {
+            font-size: clamp(22px, 4vw, 34px);
+            color: #d7e2ed;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            color: var(--muted);
+            font-size: 17px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 23px;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: 0.3s;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #06111d;
+        }
+
+        .btn-primary:hover {
+            background: #7dd3fc;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(56,189,248,0.1);
+            transform: translateY(-3px);
+        }
+
+        /* ================= GENERAL ================= */
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .section-title p {
+            color: var(--muted);
+        }
+
+        /* ================= ABOUT ================= */
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 28px;
+            margin-bottom: 18px;
+        }
+
+        .about-text p {
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .info-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info {
+            background: var(--card);
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .info strong {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .info span {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ================= SKILLS ================= */
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 25px;
+            transition: 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+        }
+
+        .skill-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .skill-card p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ================= SERVICES ================= */
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .service {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 30px;
+        }
+
+        .service .icon {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .service h3 {
+            margin-bottom: 12px;
+        }
+
+        .service p {
+            color: var(--muted);
+        }
+
+        /* ================= PROJECTS ================= */
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .project {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 28px;
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+        }
+
+        .project-label {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .project h3 {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .project p {
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech span {
+            background: rgba(56,189,248,0.08);
+            color: #bae6fd;
+            border: 1px solid rgba(56,189,248,0.15);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* ================= EDUCATION ================= */
+
+        .education {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .education-item {
+            background: var(--card);
+            border-left: 4px solid var(--primary);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .education-item h3 {
+            margin-bottom: 7px;
+        }
+
+        .education-item .date {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .education-item p {
+            color: var(--muted);
+        }
+
+        /* ================= CONTACT ================= */
+
+        .contact-box {
+            max-width: 750px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .contact-box > p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 14px 20px;
+            border-radius: 9px;
+            color: var(--muted);
+            transition: 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 30px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        footer span {
+            color: var(--primary);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 850px) {
+
+            .nav-links {
+                position: absolute;
+                top: 75px;
+                left: 0;
+                width: 100%;
+                background: #07111f;
+                flex-direction: column;
+                align-items: center;
+                padding: 25px 0;
+                display: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .about-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid,
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            section {
+                padding: 75px 0;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+            }
+
+            .hero h2 {
+                font-size: 24px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .skills-grid,
+            .services-grid,
+            .info-box {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 30px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header>
+        <div class="container">
+            <nav>
+
+                <a href="#home" class="logo">
+                    Usman<span>.</span>
+                </a>
+
+                <button class="menu-btn" id="menuBtn">
+                    ☰
+                </button>
+
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero" id="home">
+
+        <div class="container">
+
+            <div class="hero-content">
+
+                <div class="intro">
+                    Hello, I'm
+                </div>
+
+                <h1>
+                    Usman Musa <span>Hassan</span>
+                </h1>
+
+                <h2>
+                    Software & Web Developer
+                </h2>
+
+                <p>
+                    HND graduate in Software & Web Development with a passion
+                    for building modern, responsive and user-friendly web
+                    applications using technologies such as HTML, CSS,
+                    JavaScript, PHP and MySQL.
+                </p>
+
+                <div class="buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        View My Projects
+                    </a>
+
+                    <a href="#contact" class="btn btn-outline">
+                        Get In Touch
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section id="about">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>About <span>Me</span></h2>
+                <p>A little about my background and what I do.</p>
+            </div>
+
+            <div class="about-grid">
+
+                <div class="about-text">
+
+                    <h3>Building ideas into digital experiences.</h3>
+
+                    <p>
+                        I'm Usman Musa Hassan, a Software & Web Development
+                        graduate with an interest in creating practical,
+                        responsive and modern web applications.
+                    </p>
+
+                    <p>
+                        I enjoy working on both the front-end and back-end
+                        sides of web development, from designing interfaces
+                        with HTML and CSS to building database-driven
+                        applications with PHP and MySQL.
+                    </p>
+
+                    <p>
+                        My goal is to continue improving my technical skills,
+                        work on real-world projects and contribute to
+                        meaningful software solutions.
+                    </p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <div class="info">
+                        <strong>Qualification</strong>
+                        <span>HND Software & Web Development</span>
+                    </div>
+
+                    <div class="info">
+                        <strong>Location</strong>
+                        <span>Kano, Nigeria</span>
+                    </div>
+
+                    <div class="info">
+                        <strong>Specialization</strong>
+                        <span>Web Development</span>
+                    </div>
+
+                    <div class="info">
+                        <strong>Focus</strong>
+                        <span>Modern Web Applications</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SKILLS ================= -->
+
+    <section id="skills">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Technical <span>Skills</span></h2>
+                <p>Technologies and tools I work with.</p>
+            </div>
+
+            <div class="skills-grid">
+
+                <div class="skill-card">
+                    <h3>HTML5 & CSS3</h3>
+                    <p>
+                        Building structured, responsive and accessible
+                        web interfaces.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>JavaScript</h3>
+                    <p>
+                        Creating interactive and dynamic web experiences.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>PHP & MySQL</h3>
+                    <p>
+                        Developing server-side applications and
+                        database-driven websites.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Tailwind CSS</h3>
+                    <p>
+                        Creating modern and responsive user interfaces
+                        using utility-first CSS.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Bootstrap</h3>
+                    <p>
+                        Building responsive layouts and reusable
+                        interface components.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Git & GitHub</h3>
+                    <p>
+                        Version control, source-code management and
+                        project collaboration.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>WordPress</h3>
+                    <p>
+                        Creating and managing websites using WordPress.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Responsive Design</h3>
+                    <p>
+                        Designing websites that work across phones,
+                        tablets and desktop devices.
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <h3>UI/UX Fundamentals</h3>
+                    <p>
+                        Applying basic user interface and user experience
+                        principles to web projects.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= SERVICES ================= -->
+
+    <section id="services">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>What I <span>Do</span></h2>
+                <p>Areas where I can contribute.</p>
+            </div>
+
+            <div class="services-grid">
+
+                <div class="service">
+                    <div class="icon">🌐</div>
+                    <h3>Web Development</h3>
+                    <p>
+                        Building modern and responsive websites for
+                        individuals, businesses and organizations.
+                    </p>
+                </div>
+
+                <div class="service">
+                    <div class="icon">💻</div>
+                    <h3>Web Applications</h3>
+                    <p>
+                        Developing interactive web applications with
+                        front-end and back-end technologies.
+                    </p>
+                </div>
+
+                <div class="service">
+                    <div class="icon">🗄️</div>
+                    <h3>Database Applications</h3>
+                    <p>
+                        Creating applications that store and manage
+                        information using PHP and MySQL.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PROJECTS ================= -->
+
+    <section id="projects">
+
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Featured <span>Projects</span></h2>
+                <p>Some of the projects I have worked on
