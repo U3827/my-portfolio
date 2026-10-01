@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Nexus Dashboard</title>
 
-    <!-- Dashboard Styles -->
-    <link rel="stylesheet" href="nexus-dashboard.css">
+    <!-- Dashboard CSS -->
+    <link
+        rel="stylesheet"
+        href="nexus-dashboard.css?v=20261001"
+    >
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,104 +34,145 @@
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-    <aside class="sidebar" id="sidebar">
+    <aside
+        class="sidebar"
+        id="sidebar">
 
-        <!-- Brand -->
         <div class="sidebar-top">
 
-            <a href="nexus.html" class="brand" aria-label="Nexus Home">
+            <a
+                href="nexus.html"
+                class="brand"
+                aria-label="Nexus Home">
 
-                <span class="brand-mark">N</span>
+                <span class="brand-mark">
+                    N
+                </span>
 
                 <span class="brand-text">
-                    <strong>Nexus</strong>
-                    <small>Learning Platform</small>
+
+                    <strong>
+                        Nexus
+                    </strong>
+
+                    <small>
+                        Learning Platform
+                    </small>
+
                 </span>
 
             </a>
 
-            <!-- Mobile Close -->
+
             <button
                 class="close-sidebar"
                 id="closeSidebar"
                 type="button"
-                aria-label="Close navigation menu">
+                aria-label="Close menu">
+
                 ×
+
             </button>
 
         </div>
 
 
         <!-- Navigation -->
-        <nav class="sidebar-nav" aria-label="Dashboard navigation">
+        <nav
+            class="sidebar-nav"
+            aria-label="Dashboard navigation">
 
-            <!-- Dashboard -->
             <a
                 href="nexus-dashboard.html"
                 class="nav-item active">
 
-                <span class="nav-icon">⌂</span>
-                <span>Dashboard</span>
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
 
             </a>
 
 
-            <!-- My Courses -->
             <a
                 href="#"
                 class="nav-item"
                 id="coursesLink">
 
-                <span class="nav-icon">▣</span>
-                <span>My Courses</span>
+                <span class="nav-icon">
+                    ▣
+                </span>
+
+                <span>
+                    My Courses
+                </span>
 
             </a>
 
 
-            <!-- Explore Courses -->
             <a
                 href="#"
                 class="nav-item"
                 id="exploreCoursesLink">
 
-                <span class="nav-icon">◉</span>
-                <span>Explore Courses</span>
+                <span class="nav-icon">
+                    ◉
+                </span>
+
+                <span>
+                    Explore Courses
+                </span>
 
             </a>
 
 
-            <!-- Quizzes -->
             <a
                 href="#"
                 class="nav-item"
                 id="quizzesLink">
 
-                <span class="nav-icon">✓</span>
-                <span>Quizzes &amp; Exams</span>
+                <span class="nav-icon">
+                    ✓
+                </span>
+
+                <span>
+                    Quizzes &amp; Exams
+                </span>
 
             </a>
 
 
-            <!-- Bookmarks -->
             <a
                 href="#"
                 class="nav-item"
                 id="bookmarksLink">
 
-                <span class="nav-icon">🔖</span>
-                <span>Bookmarks</span>
+                <span class="nav-icon">
+                    🔖
+                </span>
+
+                <span>
+                    Bookmarks
+                </span>
 
             </a>
 
 
-            <!-- History -->
             <a
                 href="#"
                 class="nav-item"
                 id="historyLink">
 
-                <span class="nav-icon">◷</span>
-                <span>History</span>
+                <span class="nav-icon">
+                    ◷
+                </span>
+
+                <span>
+                    History
+                </span>
 
             </a>
 
@@ -133,26 +180,34 @@
             <div class="nav-divider"></div>
 
 
-            <!-- Settings -->
             <a
                 href="#"
                 class="nav-item"
                 id="settingsLink">
 
-                <span class="nav-icon">⚙</span>
-                <span>Settings</span>
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
 
             </a>
 
 
-            <!-- Help -->
             <a
                 href="#"
                 class="nav-item"
                 id="helpLink">
 
-                <span class="nav-icon">?</span>
-                <span>Help &amp; Support</span>
+                <span class="nav-icon">
+                    ?
+                </span>
+
+                <span>
+                    Help &amp; Support
+                </span>
 
             </a>
 
@@ -162,27 +217,37 @@
         <!-- Sidebar Bottom -->
         <div class="sidebar-bottom">
 
-            <!-- System Status -->
             <div class="sidebar-status">
 
                 <span class="status-dot"></span>
 
                 <div>
-                    <strong>System Online</strong>
-                    <small>Nexus is running normally</small>
+
+                    <strong>
+                        System Online
+                    </strong>
+
+                    <small>
+                        Nexus is running normally
+                    </small>
+
                 </div>
 
             </div>
 
 
-            <!-- Logout -->
             <button
                 class="logout-btn"
                 id="logoutBtn"
                 type="button">
 
-                <span>↪</span>
-                <span>Log out</span>
+                <span>
+                    ↪
+                </span>
+
+                <span>
+                    Log out
+                </span>
 
             </button>
 
@@ -198,18 +263,17 @@
 
 
         <!-- =================================================
-             TOP HEADER
+             HEADER
         ================================================== -->
         <header class="dashboard-header">
 
-            <!-- Mobile Menu -->
             <div class="header-left">
 
                 <button
                     class="menu-toggle"
                     id="menuToggle"
                     type="button"
-                    aria-label="Open navigation menu">
+                    aria-label="Open menu">
 
                     ☰
 
@@ -222,17 +286,17 @@
                         NEXUS LEARNING PLATFORM
                     </span>
 
-                    <h1>Dashboard</h1>
+                    <h1>
+                        Dashboard
+                    </h1>
 
                 </div>
 
             </div>
 
 
-            <!-- Header Actions -->
             <div class="header-actions">
 
-                <!-- Notifications -->
                 <button
                     class="notification-btn"
                     id="notificationBtn"
@@ -244,23 +308,26 @@
                     <span
                         class="notification-count"
                         id="notificationCount">
+
                         0
+
                     </span>
 
                 </button>
 
 
-                <!-- User -->
                 <div
                     class="user-menu"
                     id="userMenu">
 
                     <div
                         class="user-avatar"
-                        id="userAvatar"
-                        aria-label="User avatar">
+                        id="userAvatar">
+
                         U
+
                     </div>
+
 
                     <div class="user-summary">
 
@@ -288,17 +355,12 @@
 
 
             <!-- =================================================
-                 NEXUS MARQUEE
+                 COLORFUL NEXUS MARQUEE
             ================================================== -->
             <section
                 class="nexus-marquee"
                 id="nexusMarquee"
-                aria-label="Nexus learning message">
-
-                <!--
-                    The dashboard JavaScript generates
-                    the colorful animated letters here.
-                -->
+                aria-label="Nexus message">
 
                 <div class="marquee-track">
 
@@ -316,7 +378,7 @@
 
 
             <!-- =================================================
-                 WELCOME SECTION
+                 WELCOME
             ================================================== -->
             <section class="welcome-section">
 
@@ -343,8 +405,13 @@
                     class="primary-action"
                     id="browseCoursesBtn">
 
-                    <span>Explore Courses</span>
-                    <span>→</span>
+                    <span>
+                        Explore Courses
+                    </span>
+
+                    <span>
+                        →
+                    </span>
 
                 </a>
 
@@ -354,12 +421,8 @@
             <!-- =================================================
                  STATISTICS
             ================================================== -->
-            <section
-                class="stats-grid"
-                aria-label="Learning statistics">
+            <section class="stats-grid">
 
-
-                <!-- Enrolled Courses -->
                 <article class="stat-card">
 
                     <div class="stat-icon courses-icon">
@@ -381,7 +444,6 @@
                 </article>
 
 
-                <!-- Average Progress -->
                 <article class="stat-card">
 
                     <div class="stat-icon progress-icon">
@@ -405,7 +467,6 @@
                 </article>
 
 
-                <!-- Completed Courses -->
                 <article class="stat-card">
 
                     <div class="stat-icon completed-icon">
@@ -427,7 +488,6 @@
                 </article>
 
 
-                <!-- Quiz Attempts -->
                 <article class="stat-card">
 
                     <div class="stat-icon quiz-icon">
@@ -452,16 +512,13 @@
 
 
             <!-- =================================================
-                 MAIN DASHBOARD GRID
+                 MAIN GRID
             ================================================== -->
             <section class="dashboard-grid">
 
 
-                <!-- =================================================
-                     CONTINUE LEARNING
-                ================================================== -->
-                <article
-                    class="dashboard-card continue-card">
+                <!-- Continue Learning -->
+                <article class="dashboard-card continue-card">
 
                     <div class="card-heading">
 
@@ -521,11 +578,8 @@
                 </article>
 
 
-                <!-- =================================================
-                     PROGRESS
-                ================================================== -->
-                <article
-                    class="dashboard-card progress-card">
+                <!-- Progress -->
+                <article class="dashboard-card progress-card">
 
                     <div class="card-heading">
 
@@ -546,8 +600,6 @@
 
                     <div class="progress-overview">
 
-
-                        <!-- Progress Circle -->
                         <div class="progress-circle">
 
                             <div class="progress-circle-inner">
@@ -565,9 +617,7 @@
                         </div>
 
 
-                        <!-- Progress Details -->
                         <div class="progress-details">
-
 
                             <div class="progress-row">
 
@@ -607,7 +657,6 @@
 
                             </div>
 
-
                         </div>
 
                     </div>
@@ -615,11 +664,8 @@
                 </article>
 
 
-                <!-- =================================================
-                     RECENT ACTIVITY
-                ================================================== -->
-                <article
-                    class="dashboard-card activity-card">
+                <!-- Recent Activity -->
+                <article class="dashboard-card activity-card">
 
                     <div class="card-heading">
 
@@ -662,11 +708,8 @@
                 </article>
 
 
-                <!-- =================================================
-                     BOOKMARKS
-                ================================================== -->
-                <article
-                    class="dashboard-card bookmarks-card">
+                <!-- Bookmarks -->
+                <article class="dashboard-card bookmarks-card">
 
                     <div class="card-heading">
 
@@ -717,7 +760,6 @@
 
                 </article>
 
-
             </section>
 
 
@@ -725,7 +767,6 @@
                  QUICK ACTIONS
             ================================================== -->
             <section class="quick-section">
-
 
                 <div class="section-heading">
 
@@ -747,7 +788,6 @@
                 <div class="quick-grid">
 
 
-                    <!-- Explore -->
                     <a
                         href="#"
                         class="quick-card"
@@ -776,7 +816,6 @@
                     </a>
 
 
-                    <!-- Quiz -->
                     <a
                         href="#"
                         class="quick-card"
@@ -794,4 +833,28 @@
 
                             <small>
                                 Test what you've learned
-              
+                            </small>
+
+                        </div>
+
+                        <span class="quick-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        class="quick-card"
+                        id="quickBookmarks">
+
+                        <span class="quick-icon">
+                            🔖
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                View Bookmarks
+           
