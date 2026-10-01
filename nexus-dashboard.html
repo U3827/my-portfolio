@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nexus Dashboard</title>
+
+    <link rel="stylesheet" href="nexus-dashboard.css">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <!-- =========================
+         MOBILE OVERLAY
+    ========================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-top">
+
+            <a href="nexus.html" class="brand">
+                <span class="brand-mark">N</span>
+
+                <span class="brand-text">
+                    <strong>Nexus</strong>
+                    <small>Learning Platform</small>
+                </span>
+            </a>
+
+            <button
+                class="close-sidebar"
+                id="closeSidebar"
+                aria-label="Close menu">
+                ×
+            </button>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="nexus-dashboard.html" class="nav-item active">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="nav-item" id="coursesLink">
+                <span class="nav-icon">▣</span>
+                <span>My Courses</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span>Explore Courses</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">✓</span>
+                <span>Quizzes & Exams</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🔖</span>
+                <span>Bookmarks</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">◷</span>
+                <span>History</span>
+            </a>
+
+            <div class="nav-divider"></div>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <span class="nav-icon">?</span>
+                <span>Help & Support</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+
+                <div>
+                    <strong>System Online</strong>
+                    <small>Nexus is running normally</small>
+                </div>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn">
+                <span>↪</span>
+                Log out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN AREA
+    ========================== -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="dashboard-header">
+
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Open menu">
+                ☰
+            </button>
+
+
+            <div class="header-title">
+
+                <span class="eyebrow">
+                    NEXUS LEARNING PLATFORM
+                </span>
+
+                <h1>Dashboard</h1>
+
+            </div>
+
+
+            <div class="header-actions">
+
+                <button
+                    class="notification-btn"
+                    id="notificationBtn"
+                    aria-label="Notifications">
+
+                    🔔
+
+                    <span
+                        class="notification-count"
+                        id="notificationCount">
+                        0
+                    </span>
+
+                </button>
+
+
+                <div class="user-menu" id="userMenu">
+
+                    <div class="user-avatar" id="userAvatar">
+                        U
+                    </div>
+
+                    <div class="user-summary">
+
+                        <strong id="headerUserName">
+                            Loading...
+                        </strong>
+
+                        <small id="headerUserRole">
+                            Student
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             DASHBOARD CONTENT
+        ========================== -->
+        <section class="dashboard-content">
+
+
+            <!-- WELCOME -->
+            <section class="welcome-section">
+
+                <div class="welcome-copy">
+
+                    <span class="section-label">
+                        YOUR LEARNING SPACE
+                    </span>
+
+                    <h2 id="welcomeTitle">
+                        Welcome back! 👋
+                    </h2>
+
+                    <p>
+                        Continue learning, track your progress,
+                        and keep building your skills.
+                    </p>
+
+                </div>
+
+
+                <a href="#" class="primary-action" id="browseCoursesBtn">
+                    Explore Courses
+                    <span>→</span>
+                </a>
+
+            </section>
+
+
+            <!-- =========================
+                 STATISTICS
+            ========================== -->
+            <section class="stats-grid">
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon courses-icon">
+                        📚
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Enrolled Courses</span>
+
+                        <strong id="enrolledCourses">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon progress-icon">
+                        📈
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Average Progress</span>
+
+                        <strong>
+                            <span id="averageProgress">0</span>%
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon completed-icon">
+                        🏆
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Completed Courses</span>
+
+                        <strong id="completedCourses">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article class="stat-card">
+
+                    <div class="stat-icon quiz-icon">
+                        ✓
+                    </div>
+
+                    <div class="stat-info">
+
+                        <span>Quiz Attempts</span>
+
+                        <strong id="quizAttempts">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =========================
+                 MAIN GRID
+            ========================== -->
+            <section class="dashboard-grid">
+
+
+                <!-- CONTINUE LEARNING -->
+                <article class="dashboard-card continue-card">
+
+                    <div class="card-heading">
+
+                        <div>
+                            <span class="card-label">
+                                CONTINUE LEARNING
+                            </span>
+
+                            <h3>Pick up where you left off</h3>
+                        </div>
+
+                        <a href="#" id="viewCoursesBtn">
+                            View all
+                        </a>
+
+                    </div>
+
+
+                    <div id="continueLearning">
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">
+                                ▶
+                            </div>
+
+                            <h4>No courses yet</h4>
+
+                            <p>
+                                Enroll in a course to start
+                                your learning journey.
+                            </p>
+
+                            <a href="#" id="emptyExploreBtn">
+                                Explore Courses →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PROGRESS -->
+                <article class="dashboard-card progress-card">
+
+                    <div class="card-heading">
+
+                        <div>
+                            <span class="card-label">
+                                YOUR PROGRESS
+                            </span>
+
+                            <h3>Learning overview</h3>
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-overview">
+
+                        <div class="progress-circle">
+
+                            <div class="progress-circle-inner">
+
+                                <strong id="overallProgress">
+                                    0%
+                                </strong>
+
+                                <span>overall</span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="progress-details">
+
+                            <div class="progress-row">
+
+                                <span>
+                                    Courses enrolled
+                                </span>
+
+                                <strong id="progressCourses">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress-row">
+
+                                <span>
+                                    Lessons completed
+                                </span>
+
+                                <strong id="completedLessons">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress-row">
+
+                                <span>
+                                    Quizzes attempted
+                                </span>
+
+                                <strong id="progressQuizzes">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- RECENT ACTIVITY -->
+                <article class="dashboard-card activity-card">
+
+                    <div class="card-heading">
+
+                        <div>
+                            <span class="card-label">
+                                RECENT ACTIVITY
+                            </span>
+
+                            <h3>What you've been doing</h3>
+                        </div>
+
+                    </div>
+
+
+                    <div id="recentActivity">
+
+                        <div class="empty-state compact">
+
+                            <div class="empty-icon">
+                                ◷
+                            </div>
+
+                            <h4>No recent activity</h4>
+
+                            <p>
+                                Your learning activity will
+                                appear here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- BOOKMARKS -->
+                <article class="dashboard-card bookmarks-card">
+
+                    <div class="card-heading">
+
+                        <div>
+                            <span class="card-label">
+                                SAVED LESSONS
+                            </span>
+
+                            <h3>Your bookmarks</h3>
+                        </div>
+
+                        <a href="#" id="viewBookmarksBtn">
+                            View all
+                        </a>
+
+                    </div>
+
+
+                    <div id="bookmarksList">
+
+                        <div class="empty-state compact">
+
+                            <div class="empty-icon">
+                                🔖
+                            </div>
+
+                            <h4>No bookmarks</h4>
+
+                            <p>
+                                Save lessons you want to
+                                revisit later.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =========================
+                 QUICK ACTIONS
+            ========================== -->
+            <section class="quick-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            QUICK ACTIONS
+                        </span>
+
+                        <h3>
+                            Keep your learning moving
+                        </h3>
+                    </div>
+
+                </div>
+
+
+                <div class="quick-grid">
+
+
+                    <a href="#" class="quick-card">
+
+                        <span class="quick-icon">
+                            🔍
+                        </span>
+
+                        <div>
+                            <strong>
+                                Explore Courses
+                            </strong>
+
+                            <small>
+                                Find something new to learn
+                            </small>
+                        </div>
+
+                        <span class="quick-arrow">→</span>
+
+                    </a>
+
+
+                    <a href="#" class="quick-card">
+
+                        <span class="quick-icon">
+                            📝
+                        </span>
+
+                        <div>
+                            <strong>
+                                Take a Quiz
+                            </strong>
+
+                            <small>
+                                Test what you've learned
+                            </small>
+                        </div>
+
+                        <span class="quick-arrow">→</span>
+
+                    </a>
+
+
+                    <a href="#" class="quick-card">
+
+                        <span class="quick-icon">
+                            🔖
+                        </span>
+
+                        <div>
+                            <strong>
+                                View Bookmarks
+                            </strong>
+
+                            <small>
+                                Revisit saved lessons
+                            </small>
+                        </div>
+
+                        <span class="quick-arrow">→</span>
+
+                    </a>
+
+
+                    <a href="#" class="quick-card">
+
+                        <span class="quick-icon">
+                            👤
+                        </span>
+
+                        <div>
+                            <strong>
+                                Your Profile
+                            </strong>
+
+                            <small>
+                                Manage your account
+                            </small>
+                        </div>
+
+                        <span class="quick-arrow">→</span>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+        </section>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+        <footer class="dashboard-footer">
+
+            <span>
+                © <span id="currentYear"></span> Nexus
+            </span>
+
+            <span>
+                Learning. Building. Growing.
+            </span>
+
+        </footer>
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="nexus-dashboard.js"></script>
+
+</body>
+      </html>
