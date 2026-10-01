@@ -8,39 +8,48 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_PUBLISHABLE_KEY
 );
 
+
+// ========================================
+// ELEMENTS
+// ========================================
+
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const passwordToggle = document.getElementById("passwordToggle");
-const messageBox = document.getElementById("message");
-
-const loginButton = loginForm
-    ? loginForm.querySelector("button[type='submit']")
-    : null;
+const formMessage = document.getElementById("formMessage");
+const loginButton = document.getElementById("loginButton");
+const loginButtonText = document.getElementById("loginButtonText");
 
 
-// ================================
+// ========================================
 // PASSWORD SHOW / HIDE
-// ================================
+// ========================================
 
 if (passwordToggle && passwordInput) {
+
     passwordToggle.addEventListener("click", () => {
 
         if (passwordInput.type === "password") {
+
             passwordInput.type = "text";
             passwordToggle.textContent = "Hide";
+
         } else {
+
             passwordInput.type = "password";
             passwordToggle.textContent = "Show";
+
         }
 
     });
+
 }
 
 
-// ================================
+// ========================================
 // LOGIN
-// ================================
+// ========================================
 
 if (loginForm) {
 
@@ -48,19 +57,44 @@ if (loginForm) {
 
         event.preventDefault();
 
+
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
-        if (!email || !password) {
+
+        // --------------------------------
+        // VALIDATION
+        // --------------------------------
+
+        if (!email) {
 
             showMessage(
-                "Please enter your email and password.",
+                "Please enter your email address.",
                 "error"
             );
+
+            emailInput.focus();
 
             return;
         }
 
+
+        if (!password) {
+
+            showMessage(
+                "Please enter your password.",
+                "error"
+            );
+
+            passwordInput.focus();
+
+            return;
+        }
+
+
+        // --------------------------------
+        // START LOADING
+        // --------------------------------
 
         setLoading(true);
 
@@ -72,24 +106,36 @@ if (loginForm) {
 
         try {
 
+            console.log("Nexus: attempting login...");
+
+
+            // --------------------------------
+            // SUPABASE LOGIN
+            // --------------------------------
+
             const { data, error } =
                 await supabaseClient.auth.signInWithPassword({
+
                     email: email,
                     password: password
+
                 });
 
 
-            // ================================
+            // --------------------------------
             // LOGIN ERROR
-            // ================================
+            // --------------------------------
 
             if (error) {
 
-                console.error("Login error:", error);
+                console.error(
+                    "Nexus login error:",
+                    error
+                );
 
                 showMessage(
                     error.message ||
-                    "Unable to sign in. Please check your details.",
+                    "Unable to log in. Please check your email and password.",
                     "error"
                 );
 
@@ -99,14 +145,36 @@ if (loginForm) {
             }
 
 
-            // ================================
-            // CHECK SESSION
-            // ================================
+            // --------------------------------
+            // CHECK USER
+            // --------------------------------
 
-            if (!data || !data.session) {
+            if (!data || !data.user) {
 
                 console.error(
-                    "Login completed but no session was returned.",
+                    "No user returned from Supabase.",
+                    data
+                );
+
+                showMessage(
+                    "Login failed. No user account was returned.",
+                    "error"
+                );
+
+                setLoading(false);
+
+                return;
+            }
+
+
+            // --------------------------------
+            // CHECK SESSION
+            // --------------------------------
+
+            if (!data.session) {
+
+                console.error(
+                    "No session returned from Supabase.",
                     data
                 );
 
@@ -121,9 +189,14 @@ if (loginForm) {
             }
 
 
-            console.log("Login successful.");
-            console.log("User:", data.user);
-            console.log("Session:", data.session);
+            // --------------------------------
+            // SUCCESS
+            // --------------------------------
+
+            console.log(
+                "Nexus login successful:",
+                data.user
+            );
 
 
             showMessage(
@@ -132,22 +205,29 @@ if (loginForm) {
             );
 
 
-            // ================================
-            // REDIRECT TO DASHBOARD
-            // ================================
+            // --------------------------------
+            // REDIRECT
+            // --------------------------------
+
+            console.log(
+                "Nexus: redirecting to dashboard..."
+            );
+
 
             setTimeout(() => {
 
-                window.location.href = "./nexus-dashboard.html";
+                window.location.href =
+                    "nexus-dashboard.html";
 
             }, 1000);
 
         }
 
+
         catch (error) {
 
             console.error(
-                "Unexpected login error:",
+                "Unexpected Nexus login error:",
                 error
             );
 
@@ -158,6 +238,7 @@ if (loginForm) {
             );
 
             setLoading(false);
+
         }
 
     });
@@ -165,46 +246,61 @@ if (loginForm) {
 }
 
 
-// ================================
-// LOADING BUTTON
-// ================================
+// ========================================
+// LOADING STATE
+// ========================================
 
 function setLoading(isLoading) {
 
     if (!loginButton) return;
 
+
     if (isLoading) {
 
         loginButton.disabled = true;
 
-        if (!loginButton.dataset.originalText) {
-            loginButton.dataset.originalText =
-                loginButton.textContent;
-        }
+        if (loginButtonText) {
 
-        loginButton.textContent = "Signing in...";
+            loginButtonText.textContent =
+                "Signing in...";
+
+        }
 
     } else {
 
         loginButton.disabled = false;
 
-        loginButton.textContent =
-            loginButton.dataset.originalText ||
-            "Log In";
+        if (loginButtonText) {
+
+            loginButtonText.textContent =
+                "Log In";
+
+        }
+
     }
+
 }
 
 
-// ================================
+// ========================================
 // MESSAGE
-// ================================
+// ========================================
 
 function showMessage(message, type = "info") {
 
-    if (!messageBox) return;
+    if (!formMessage) {
 
-    messageBox.textContent = message;
+        console.error(
+            "Nexus error: #formMessage was not found."
+        );
 
-    messageBox.className =
-        "message " + type;
+        return;
+    }
+
+
+    formMessage.textContent = message;
+
+    formMessage.className =
+        "form-message " + type;
+
 }
