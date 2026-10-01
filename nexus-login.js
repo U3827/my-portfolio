@@ -1,9 +1,7 @@
 const SUPABASE_URL = "https://rjtzurluhylqvfbwajwv.supabase.co";
 
-// IMPORTANT:
-// Paste the SAME REAL publishable key from your working
-// Nexus registration file here.
-const SUPABASE_PUBLISHABLE_KEY = "YOUR_REAL_PUBLISHABLE_KEY_HERE";
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
@@ -21,38 +19,48 @@ const loginButton = loginForm
     : null;
 
 
-// ========================================
+// ================================
 // PASSWORD SHOW / HIDE
-// ========================================
+// ================================
 
 if (passwordToggle && passwordInput) {
     passwordToggle.addEventListener("click", () => {
-        const showingPassword = passwordInput.type === "password";
 
-        passwordInput.type = showingPassword ? "text" : "password";
-        passwordToggle.textContent = showingPassword ? "Hide" : "Show";
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordToggle.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            passwordToggle.textContent = "Show";
+        }
+
     });
 }
 
 
-// ========================================
+// ================================
 // LOGIN
-// ========================================
+// ================================
 
 if (loginForm) {
+
     loginForm.addEventListener("submit", async (event) => {
+
         event.preventDefault();
 
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
         if (!email || !password) {
+
             showMessage(
                 "Please enter your email and password.",
                 "error"
             );
+
             return;
         }
+
 
         setLoading(true);
 
@@ -61,9 +69,9 @@ if (loginForm) {
             "info"
         );
 
+
         try {
 
-            // Sign in
             const { data, error } =
                 await supabaseClient.auth.signInWithPassword({
                     email: email,
@@ -71,9 +79,13 @@ if (loginForm) {
                 });
 
 
-            // Login error
+            // ================================
+            // LOGIN ERROR
+            // ================================
+
             if (error) {
-                console.error("Nexus login error:", error);
+
+                console.error("Login error:", error);
 
                 showMessage(
                     error.message ||
@@ -82,15 +94,19 @@ if (loginForm) {
                 );
 
                 setLoading(false);
+
                 return;
             }
 
 
-            // Make sure a session exists
+            // ================================
+            // CHECK SESSION
+            // ================================
+
             if (!data || !data.session) {
 
                 console.error(
-                    "Login succeeded but no Supabase session was returned.",
+                    "Login completed but no session was returned.",
                     data
                 );
 
@@ -100,96 +116,58 @@ if (loginForm) {
                 );
 
                 setLoading(false);
+
                 return;
             }
 
 
-            // Login successful
+            console.log("Login successful.");
+            console.log("User:", data.user);
+            console.log("Session:", data.session);
+
+
             showMessage(
                 "Login successful. Welcome back!",
                 "success"
             );
 
 
-            // ========================================
-            // VERIFY SESSION BEFORE REDIRECT
-            // ========================================
-
-            const {
-                data: sessionData,
-                error: sessionError
-            } = await supabaseClient.auth.getSession();
-
-
-            if (sessionError) {
-                console.error(
-                    "Session verification error:",
-                    sessionError
-                );
-
-                showMessage(
-                    "Login succeeded, but the session could not be verified.",
-                    "error"
-                );
-
-                setLoading(false);
-                return;
-            }
-
-
-            if (!sessionData || !sessionData.session) {
-                console.error(
-                    "No active session after login."
-                );
-
-                showMessage(
-                    "No active session was found after login.",
-                    "error"
-                );
-
-                setLoading(false);
-                return;
-            }
-
-
-            console.log(
-                "Nexus session verified. Redirecting to dashboard..."
-            );
-
-
-            // ========================================
-            // REDIRECT
-            // ========================================
+            // ================================
+            // REDIRECT TO DASHBOARD
+            // ================================
 
             setTimeout(() => {
 
-                window.location.assign(
-                    "./nexus-dashboard.html"
-                );
+                window.location.href = "./nexus-dashboard.html";
 
-            }, 500);
+            }, 1000);
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
-                "Unexpected Nexus login error:",
+                "Unexpected login error:",
                 error
             );
 
             showMessage(
-                "Something went wrong while logging in. Please try again.",
+                error.message ||
+                "Something went wrong while logging in.",
                 "error"
             );
 
             setLoading(false);
         }
+
     });
+
 }
 
 
-// ========================================
-// LOADING STATE
-// ========================================
+// ================================
+// LOADING BUTTON
+// ================================
 
 function setLoading(isLoading) {
 
@@ -197,12 +175,13 @@ function setLoading(isLoading) {
 
     if (isLoading) {
 
+        loginButton.disabled = true;
+
         if (!loginButton.dataset.originalText) {
             loginButton.dataset.originalText =
                 loginButton.textContent;
         }
 
-        loginButton.disabled = true;
         loginButton.textContent = "Signing in...";
 
     } else {
@@ -216,9 +195,9 @@ function setLoading(isLoading) {
 }
 
 
-// ========================================
+// ================================
 // MESSAGE
-// ========================================
+// ================================
 
 function showMessage(message, type = "info") {
 
@@ -227,5 +206,5 @@ function showMessage(message, type = "info") {
     messageBox.textContent = message;
 
     messageBox.className =
-        `message ${type}`;
+        "message " + type;
 }
