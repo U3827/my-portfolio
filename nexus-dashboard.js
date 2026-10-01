@@ -1,177 +1,247 @@
 /* =========================================================
    NEXUS DASHBOARD
-   Final synchronized dashboard controller
-   ========================================================= */
+   VERSION: 2026-10-01
+========================================================= */
 
-const SUPABASE_URL = "https://rjtzurluhylqvfbwajwv.supabase.co";
+console.log("NEXUS DASHBOARD JS v20261001 LOADED");
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://rjtzurluhylqvfbwajwv.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
 /* =========================================================
-   DOM ELEMENTS
-   ========================================================= */
+   DOM
+========================================================= */
 
-const sidebar = document.getElementById("sidebar");
-const sidebarOverlay = document.getElementById("sidebarOverlay");
-const menuToggle = document.getElementById("menuToggle");
-const closeSidebar = document.getElementById("closeSidebar");
+const sidebar =
+    document.getElementById("sidebar");
 
-const logoutBtn = document.getElementById("logoutBtn");
+const sidebarOverlay =
+    document.getElementById("sidebarOverlay");
 
-const headerUserName = document.getElementById("headerUserName");
-const headerUserRole = document.getElementById("headerUserRole");
-const userAvatar = document.getElementById("userAvatar");
-const welcomeTitle = document.getElementById("welcomeTitle");
+const menuToggle =
+    document.getElementById("menuToggle");
 
-const notificationBtn = document.getElementById("notificationBtn");
-const notificationCount = document.getElementById("notificationCount");
+const closeSidebar =
+    document.getElementById("closeSidebar");
 
-const enrolledCourses = document.getElementById("enrolledCourses");
-const averageProgress = document.getElementById("averageProgress");
-const completedCourses = document.getElementById("completedCourses");
-const quizAttempts = document.getElementById("quizAttempts");
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
-const overallProgress = document.getElementById("overallProgress");
-const progressCourses = document.getElementById("progressCourses");
-const completedLessons = document.getElementById("completedLessons");
-const progressQuizzes = document.getElementById("progressQuizzes");
+const notificationBtn =
+    document.getElementById("notificationBtn");
 
-const continueLearning = document.getElementById("continueLearning");
-const recentActivity = document.getElementById("recentActivity");
-const bookmarksList = document.getElementById("bookmarksList");
+const notificationCount =
+    document.getElementById("notificationCount");
 
-const browseCoursesBtn = document.getElementById("browseCoursesBtn");
-const viewCoursesBtn = document.getElementById("viewCoursesBtn");
-const emptyExploreBtn = document.getElementById("emptyExploreBtn");
-const viewBookmarksBtn = document.getElementById("viewBookmarksBtn");
+const headerUserName =
+    document.getElementById("headerUserName");
 
-const currentYear = document.getElementById("currentYear");
+const headerUserRole =
+    document.getElementById("headerUserRole");
 
-const nexusMarquee = document.getElementById("nexusMarquee");
+const userAvatar =
+    document.getElementById("userAvatar");
+
+const welcomeTitle =
+    document.getElementById("welcomeTitle");
+
+const enrolledCourses =
+    document.getElementById("enrolledCourses");
+
+const averageProgress =
+    document.getElementById("averageProgress");
+
+const completedCourses =
+    document.getElementById("completedCourses");
+
+const quizAttempts =
+    document.getElementById("quizAttempts");
+
+const progressCourses =
+    document.getElementById("progressCourses");
+
+const completedLessons =
+    document.getElementById("completedLessons");
+
+const progressQuizzes =
+    document.getElementById("progressQuizzes");
+
+const overallProgress =
+    document.getElementById("overallProgress");
+
+const progressCircle =
+    document.querySelector(".progress-circle");
+
+const continueLearning =
+    document.getElementById("continueLearning");
+
+const recentActivity =
+    document.getElementById("recentActivity");
+
+const bookmarksList =
+    document.getElementById("bookmarksList");
+
+const currentYear =
+    document.getElementById("currentYear");
 
 
 /* =========================================================
-   GLOBAL DASHBOARD DATA
-   ========================================================= */
+   STATE
+========================================================= */
 
 let currentUser = null;
 let currentProfile = null;
 
-let dashboardData = {
-    enrollments: [],
-    progress: [],
-    quizzes: [],
-    bookmarks: [],
-    notifications: []
-};
+let userEnrollments = [];
+let userLessonProgress = [];
+let userQuizAttempts = [];
+let userBookmarks = [];
+let userNotifications = [];
 
 
 /* =========================================================
-   START DASHBOARD
-   ========================================================= */
+   START
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    if (currentYear) {
-        currentYear.textContent = new Date().getFullYear();
+        console.log(
+            "Nexus dashboard DOM ready."
+        );
+
+
+        if (currentYear) {
+
+            currentYear.textContent =
+                new Date().getFullYear();
+
+        }
+
+
+        setupMobileSidebar();
+        setupNavigation();
+        setupQuickActions();
+        setupNotifications();
+        setupMarquee();
+
+        loadDashboard();
+
     }
-
-    createMarquee();
-
-    setupSidebar();
-
-    setupNavigation();
-
-    setupDashboardButtons();
-
-    setupNotificationButton();
-
-    setupLogout();
-
-    await initializeDashboard();
-
-});
+);
 
 
 /* =========================================================
-   INITIALIZE DASHBOARD
-   ========================================================= */
+   DASHBOARD LOADER
+========================================================= */
 
-async function initializeDashboard() {
+async function loadDashboard() {
 
     try {
 
-        console.log("Nexus dashboard: checking session...");
+        console.log(
+            "Nexus: checking session..."
+        );
+
 
         const {
             data,
             error
-        } = await supabaseClient.auth.getUser();
+        } =
+            await supabaseClient.auth.getSession();
+
 
         if (error) {
+
             console.error(
-                "Nexus dashboard authentication error:",
+                "Session error:",
                 error
             );
 
             redirectToLogin();
             return;
+
         }
 
-        if (!data || !data.user) {
+
+        currentUser =
+            data?.session?.user || null;
+
+
+        if (!currentUser) {
 
             console.warn(
-                "Nexus dashboard: no authenticated user."
+                "No active Nexus session."
             );
 
             redirectToLogin();
             return;
+
         }
 
-        currentUser = data.user;
 
         console.log(
-            "Nexus dashboard: authenticated user:",
-            currentUser.email
+            "Nexus user:",
+            currentUser.id
         );
 
 
-        await loadUserProfile();
+        await loadProfile();
 
         await loadDashboardData();
 
-        renderDashboard();
+        renderUser();
+
+        renderStatistics();
+
+        renderProgress();
+
+        renderContinueLearning();
+
+        renderRecentActivity();
+
+        renderBookmarks();
+
+        renderNotifications();
+
+
+        showToast(
+            "Nexus dashboard connected.",
+            "success"
+        );
+
 
         console.log(
-            "Nexus dashboard initialized successfully."
+            "Nexus dashboard fully loaded."
         );
 
     } catch (error) {
 
         console.error(
-            "Nexus dashboard initialization error:",
+            "Dashboard startup error:",
             error
         );
 
-        /*
-           We do not immediately redirect here because a
-           temporary database problem should not destroy a
-           valid login session.
-        */
-
         showToast(
-            "Dashboard loaded, but some information could not be retrieved.",
-            "warning"
+            "Nexus dashboard encountered an error.",
+            "error"
         );
-
-        renderFallbackUser();
 
     }
 
@@ -179,96 +249,368 @@ async function initializeDashboard() {
 
 
 /* =========================================================
-   LOAD USER PROFILE
-   ========================================================= */
+   PROFILE
+========================================================= */
 
-async function loadUserProfile() {
+async function loadProfile() {
 
     if (!currentUser) return;
 
-
-    /*
-       First try the Nexus profiles table.
-    */
 
     try {
 
         const {
             data,
             error
-        } = await supabaseClient
-            .from("profiles")
-            .select("id, full_name, role")
-            .eq("id", currentUser.id)
-            .maybeSingle();
-
-
-        if (!error && data) {
-
-            currentProfile = data;
-
-            console.log(
-                "Nexus profile loaded:",
-                currentProfile
-            );
-
-            renderUserInformation();
-
-            return;
-        }
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq(
+                    "id",
+                    currentUser.id
+                )
+                .maybeSingle();
 
 
         if (error) {
 
-            console.warn(
-                "Nexus profile query:",
-                error.message
+            console.error(
+                "Profile error:",
+                error
             );
+
+            currentProfile = null;
+            return;
 
         }
 
+
+        currentProfile =
+            data || null;
+
+
+        console.log(
+            "Profile loaded:",
+            currentProfile
+        );
+
     } catch (error) {
 
-        console.warn(
-            "Profile loading exception:",
+        console.error(
+            "Profile exception:",
             error
         );
 
+        currentProfile = null;
+
     }
-
-
-    /*
-       Fallback to Supabase Auth metadata.
-       This prevents "Loading..." from remaining on
-       the dashboard even if the profile query fails.
-    */
-
-    currentProfile = {
-        id: currentUser.id,
-        full_name:
-            currentUser.user_metadata?.full_name ||
-            currentUser.user_metadata?.name ||
-            currentUser.email?.split("@")[0] ||
-            "Nexus User",
-        role: "student"
-    };
-
-    renderUserInformation();
 
 }
 
 
 /* =========================================================
-   RENDER USER INFORMATION
-   ========================================================= */
+   DASHBOARD DATA
+========================================================= */
 
-function renderUserInformation() {
+async function loadDashboardData() {
 
-    const name =
-        currentProfile?.full_name ||
-        currentUser?.user_metadata?.full_name ||
-        currentUser?.email?.split("@")[0] ||
+    if (!currentUser) return;
+
+
+    /* Enrollments */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("enrollments")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "enrolled_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Enrollments error:",
+                error
+            );
+
+            userEnrollments = [];
+
+        } else {
+
+            userEnrollments =
+                data || [];
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Enrollments exception:",
+            error
+        );
+
+        userEnrollments = [];
+
+    }
+
+
+    /* Lesson progress */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("lesson_progress")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "updated_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Lesson progress error:",
+                error
+            );
+
+            userLessonProgress = [];
+
+        } else {
+
+            userLessonProgress =
+                data || [];
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Lesson progress exception:",
+            error
+        );
+
+        userLessonProgress = [];
+
+    }
+
+
+    /* Quiz attempts */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("quiz_attempts")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "started_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Quiz attempts error:",
+                error
+            );
+
+            userQuizAttempts = [];
+
+        } else {
+
+            userQuizAttempts =
+                data || [];
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Quiz attempts exception:",
+            error
+        );
+
+        userQuizAttempts = [];
+
+    }
+
+
+    /* Bookmarks */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("bookmarks")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Bookmarks error:",
+                error
+            );
+
+            userBookmarks = [];
+
+        } else {
+
+            userBookmarks =
+                data || [];
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Bookmarks exception:",
+            error
+        );
+
+        userBookmarks = [];
+
+    }
+
+
+    /* Notifications */
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("notifications")
+                .select("*")
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                )
+                .limit(20);
+
+
+        if (error) {
+
+            console.error(
+                "Notifications error:",
+                error
+            );
+
+            userNotifications = [];
+
+        } else {
+
+            userNotifications =
+                data || [];
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Notifications exception:",
+            error
+        );
+
+        userNotifications = [];
+
+    }
+
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
+
+function renderUser() {
+
+    if (!currentUser) return;
+
+
+    const metadata =
+        currentUser.user_metadata || {};
+
+
+    const profileName =
+        currentProfile?.full_name || "";
+
+
+    const metadataName =
+        metadata.full_name ||
+        metadata.name ||
+        "";
+
+
+    const emailName =
+        currentUser.email
+            ? currentUser.email.split("@")[0]
+            : "Nexus User";
+
+
+    const fullName =
+        profileName ||
+        metadataName ||
+        emailName ||
         "Nexus User";
+
 
     const role =
         currentProfile?.role ||
@@ -276,20 +618,32 @@ function renderUserInformation() {
 
 
     if (headerUserName) {
-        headerUserName.textContent = name;
+
+        headerUserName.textContent =
+            fullName;
+
     }
 
 
     if (headerUserRole) {
+
         headerUserRole.textContent =
             formatRole(role);
+
     }
 
 
     if (welcomeTitle) {
 
+        const firstName =
+            fullName
+                .trim()
+                .split(/\s+/)[0] ||
+                "there";
+
+
         welcomeTitle.textContent =
-            `Welcome back, ${getFirstName(name)}! 👋`;
+            `Welcome back, ${firstName}! 👋`;
 
     }
 
@@ -297,562 +651,185 @@ function renderUserInformation() {
     if (userAvatar) {
 
         userAvatar.textContent =
-            getInitials(name);
-
-        userAvatar.setAttribute(
-            "aria-label",
-            `${name} profile`
-        );
+            getInitials(fullName);
 
     }
-
-}
-
-
-/* =========================================================
-   FALLBACK USER DISPLAY
-   ========================================================= */
-
-function renderFallbackUser() {
-
-    if (!currentUser) return;
-
-    const name =
-        currentUser.user_metadata?.full_name ||
-        currentUser.email?.split("@")[0] ||
-        "Nexus User";
-
-
-    if (headerUserName) {
-        headerUserName.textContent = name;
-    }
-
-
-    if (headerUserRole) {
-        headerUserRole.textContent = "Student";
-    }
-
-
-    if (welcomeTitle) {
-        welcomeTitle.textContent =
-            `Welcome back, ${getFirstName(name)}! 👋`;
-    }
-
-
-    if (userAvatar) {
-        userAvatar.textContent = getInitials(name);
-    }
-
-}
-
-
-/* =========================================================
-   LOAD DASHBOARD DATA
-   ========================================================= */
-
-async function loadDashboardData() {
-
-    if (!currentUser) return;
-
-
-    /*
-       Each query is handled separately.
-       This is important because one empty/problematic
-       table should not stop the entire dashboard.
-    */
-
-    const [
-        enrollmentsResult,
-        progressResult,
-        quizzesResult,
-        bookmarksResult,
-        notificationsResult
-    ] = await Promise.all([
-
-        safeQuery(
-            () =>
-                supabaseClient
-                    .from("enrollments")
-                    .select(
-                        "id, course_id, status, progress_percent, enrolled_at, completed_at"
-                    )
-                    .eq("user_id", currentUser.id)
-                    .order("enrolled_at", {
-                        ascending: false
-                    }),
-            "enrollments"
-        ),
-
-        safeQuery(
-            () =>
-                supabaseClient
-                    .from("lesson_progress")
-                    .select(
-                        "id, lesson_id, completed, progress_percent, last_position_seconds, updated_at, completed_at"
-                    )
-                    .eq("user_id", currentUser.id)
-                    .order("updated_at", {
-                        ascending: false
-                    }),
-            "lesson progress"
-        ),
-
-        safeQuery(
-            () =>
-                supabaseClient
-                    .from("quiz_attempts")
-                    .select(
-                        "id, quiz_id, attempt_number, score, percentage, passed, created_at, completed_at"
-                    )
-                    .eq("user_id", currentUser.id)
-                    .order("created_at", {
-                        ascending: false
-                    }),
-            "quiz attempts"
-        ),
-
-        safeQuery(
-            () =>
-                supabaseClient
-                    .from("bookmarks")
-                    .select(
-                        "id, lesson_id, created_at"
-                    )
-                    .eq("user_id", currentUser.id)
-                    .order("created_at", {
-                        ascending: false
-                    }),
-            "bookmarks"
-        ),
-
-        safeQuery(
-            () =>
-                supabaseClient
-                    .from("notifications")
-                    .select(
-                        "id, title, message, type, is_read, created_at"
-                    )
-                    .eq("user_id", currentUser.id)
-                    .order("created_at", {
-                        ascending: false
-                    }),
-            "notifications"
-        )
-
-    ]);
-
-
-    dashboardData.enrollments =
-        enrollmentsResult.data || [];
-
-    dashboardData.progress =
-        progressResult.data || [];
-
-    dashboardData.quizzes =
-        quizzesResult.data || [];
-
-    dashboardData.bookmarks =
-        bookmarksResult.data || [];
-
-    dashboardData.notifications =
-        notificationsResult.data || [];
-
-
-    /*
-       Load course titles separately.
-    */
-
-    await loadCourseInformation();
-
-
-    /*
-       Load lesson titles for bookmarks/activity.
-    */
-
-    await loadLessonInformation();
-
-}
-
-
-/* =========================================================
-   SAFE SUPABASE QUERY
-   ========================================================= */
-
-async function safeQuery(queryFunction, label) {
-
-    try {
-
-        const result = await queryFunction();
-
-        if (result.error) {
-
-            console.warn(
-                `Nexus ${label} query:`,
-                result.error.message
-            );
-
-            return {
-                data: [],
-                error: result.error
-            };
-
-        }
-
-        return result;
-
-    } catch (error) {
-
-        console.warn(
-            `Nexus ${label} exception:`,
-            error
-        );
-
-        return {
-            data: [],
-            error
-        };
-
-    }
-
-}
-
-
-/* =========================================================
-   COURSE INFORMATION
-   ========================================================= */
-
-let courseMap = {};
-
-
-async function loadCourseInformation() {
-
-    const courseIds =
-        dashboardData.enrollments
-            .map(item => item.course_id)
-            .filter(Boolean);
-
-
-    if (!courseIds.length) {
-        return;
-    }
-
-
-    try {
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("courses")
-            .select(
-                "id, title, description"
-            )
-            .in("id", courseIds);
-
-
-        if (error) {
-
-            console.warn(
-                "Nexus courses query:",
-                error.message
-            );
-
-            return;
-        }
-
-
-        courseMap = {};
-
-        (data || []).forEach(course => {
-
-            courseMap[course.id] = course;
-
-        });
-
-
-    } catch (error) {
-
-        console.warn(
-            "Course information error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   LESSON INFORMATION
-   ========================================================= */
-
-let lessonMap = {};
-
-
-async function loadLessonInformation() {
-
-    const lessonIds = [
-
-        ...dashboardData.progress
-            .map(item => item.lesson_id),
-
-        ...dashboardData.bookmarks
-            .map(item => item.lesson_id)
-
-    ].filter(Boolean);
-
-
-    const uniqueLessonIds =
-        [...new Set(lessonIds)];
-
-
-    if (!uniqueLessonIds.length) {
-        return;
-    }
-
-
-    try {
-
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .from("lessons")
-            .select(
-                "id, title, description"
-            )
-            .in("id", uniqueLessonIds);
-
-
-        if (error) {
-
-            console.warn(
-                "Nexus lessons query:",
-                error.message
-            );
-
-            return;
-        }
-
-
-        lessonMap = {};
-
-        (data || []).forEach(lesson => {
-
-            lessonMap[lesson.id] = lesson;
-
-        });
-
-
-    } catch (error) {
-
-        console.warn(
-            "Lesson information error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER DASHBOARD
-   ========================================================= */
-
-function renderDashboard() {
-
-    renderStatistics();
-
-    renderProgress();
-
-    renderContinueLearning();
-
-    renderRecentActivity();
-
-    renderBookmarks();
-
-    renderNotifications();
-
-    renderUserInformation();
 
 }
 
 
 /* =========================================================
    STATISTICS
-   ========================================================= */
+========================================================= */
 
 function renderStatistics() {
 
-    const enrollments =
-        dashboardData.enrollments;
-
-    const progress =
-        dashboardData.progress;
-
-    const quizzes =
-        dashboardData.quizzes;
+    const total =
+        userEnrollments.length;
 
 
-    const enrolledCount =
-        enrollments.length;
-
-
-    const completedCount =
-        enrollments.filter(
-            item => item.status === "completed"
+    const completed =
+        userEnrollments.filter(
+            item =>
+                item.status === "completed" ||
+                Number(
+                    item.progress_percent || 0
+                ) >= 100
         ).length;
 
 
-    let average = 0;
+    const values =
+        userEnrollments.map(
+            item =>
+                Number(
+                    item.progress_percent || 0
+                )
+        );
 
 
-    if (enrolledCount > 0) {
-
-        const totalProgress =
-            enrollments.reduce(
-                (sum, item) =>
-                    sum +
-                    Number(item.progress_percent || 0),
-                0
-            );
-
-        average =
-            Math.round(
-                totalProgress / enrolledCount
-            );
-
-    }
+    const average =
+        values.length
+            ? Math.round(
+                values.reduce(
+                    (a, b) => a + b,
+                    0
+                ) / values.length
+            )
+            : 0;
 
 
-    if (enrolledCourses) {
-        enrolledCourses.textContent =
-            enrolledCount;
-    }
+    enrolledCourses.textContent =
+        total;
+
+    completedCourses.textContent =
+        completed;
+
+    averageProgress.textContent =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                average
+            )
+        );
+
+    quizAttempts.textContent =
+        userQuizAttempts.length;
+
+}
 
 
-    if (completedCourses) {
-        completedCourses.textContent =
-            completedCount;
-    }
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function renderProgress() {
+
+    const total =
+        userEnrollments.length;
 
 
-    if (averageProgress) {
-        averageProgress.textContent =
-            average;
-    }
+    const lessons =
+        userLessonProgress.filter(
+            item =>
+                item.completed === true
+        ).length;
 
 
-    if (quizAttempts) {
-        quizAttempts.textContent =
-            quizzes.length;
-    }
+    const values =
+        userEnrollments.map(
+            item =>
+                Number(
+                    item.progress_percent || 0
+                )
+        );
 
 
-    if (progressCourses) {
-        progressCourses.textContent =
-            enrolledCount;
-    }
+    const average =
+        values.length
+            ? Math.round(
+                values.reduce(
+                    (a, b) => a + b,
+                    0
+                ) / values.length
+            )
+            : 0;
 
 
-    if (completedLessons) {
-
-        completedLessons.textContent =
-            progress.filter(
-                item => item.completed === true
-            ).length;
-
-    }
+    progressCourses.textContent =
+        total;
 
 
-    if (progressQuizzes) {
-        progressQuizzes.textContent =
-            quizzes.length;
-    }
+    completedLessons.textContent =
+        lessons;
+
+
+    progressQuizzes.textContent =
+        userQuizAttempts.length;
+
+
+    overallProgress.textContent =
+        `${average}%`;
+
+
+    updateProgressCircle(
+        average
+    );
 
 }
 
 
 /* =========================================================
    PROGRESS CIRCLE
-   ========================================================= */
+========================================================= */
 
-function renderProgress() {
+function updateProgressCircle(
+    value
+) {
 
-    const enrollments =
-        dashboardData.enrollments;
-
-
-    let average = 0;
+    if (!progressCircle) return;
 
 
-    if (enrollments.length) {
-
-        const total =
-            enrollments.reduce(
-                (sum, item) =>
-                    sum +
-                    Number(item.progress_percent || 0),
-                0
-            );
-
-        average =
-            Math.round(
-                total / enrollments.length
-            );
-
-    }
+    const safe =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(value) || 0
+            )
+        );
 
 
-    if (overallProgress) {
-
-        overallProgress.textContent =
-            `${average}%`;
-
-    }
+    const degrees =
+        safe * 3.6;
 
 
-    const circle =
-        document.querySelector(".progress-circle");
-
-
-    if (circle) {
-
-        const degrees =
-            Math.max(
-                0,
-                Math.min(
-                    360,
-                    average * 3.6
-                )
-            );
-
-
-        circle.style.background =
-            `conic-gradient(
-                #8b5cf6 0deg,
-                #22d3ee ${degrees}deg,
-                rgba(255,255,255,0.07) ${degrees}deg
-            )`;
-
-    }
+    progressCircle.style.background =
+        `conic-gradient(
+            #8b5cf6 0deg,
+            #22d3ee ${degrees}deg,
+            rgba(255,255,255,0.07)
+            ${degrees}deg,
+            rgba(255,255,255,0.07)
+            360deg
+        )`;
 
 }
 
 
 /* =========================================================
    CONTINUE LEARNING
-   ========================================================= */
+========================================================= */
 
 function renderContinueLearning() {
 
     if (!continueLearning) return;
 
 
-    if (!dashboardData.enrollments.length) {
+    if (!userEnrollments.length) {
 
         continueLearning.innerHTML = `
+
             <div class="empty-state">
 
                 <div class="empty-icon">
@@ -877,84 +854,254 @@ function renderContinueLearning() {
                 </a>
 
             </div>
+
         `;
 
 
-        const button =
-            document.getElementById(
-                "emptyExploreBtn"
-            );
+        setupPlaceholderLink(
+            "emptyExploreBtn",
+            "The Courses page is coming next."
+        );
 
-
-        if (button) {
-
-            button.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-
-                    showComingSoon(
-                        "Course Explorer"
-                    );
-
-                }
-            );
-
-        }
 
         return;
 
     }
 
 
-    const courses =
-        dashboardData.enrollments
-            .slice(0, 3);
+    const enrollment =
+        userEnrollments[0];
 
 
-    continueLearning.innerHTML =
-        courses.map(enrollment => {
-
-            const course =
-                courseMap[enrollment.course_id];
-
-
-            const title =
-                course?.title ||
-                "Learning Course";
+    const progress =
+        Math.round(
+            Number(
+                enrollment.progress_percent || 0
+            )
+        );
 
 
-            const progress =
-                Math.round(
-                    Number(
-                        enrollment.progress_percent || 0
-                    )
+    const courseId =
+        enrollment.course_id
+            ? String(
+                enrollment.course_id
+            ).substring(0, 8)
+            : "Course";
+
+
+    continueLearning.innerHTML = `
+
+        <div class="continue-course">
+
+            <div class="continue-course-icon">
+                📚
+            </div>
+
+            <div class="continue-course-info">
+
+                <span class="course-mini-label">
+                    ENROLLED COURSE
+                </span>
+
+                <h4>
+                    Course ${escapeHTML(courseId)}
+                </h4>
+
+                <div class="course-progress-bar">
+
+                    <span
+                        style="width:${progress}%">
+                    </span>
+
+                </div>
+
+                <small>
+                    ${progress}% complete
+                </small>
+
+            </div>
+
+            <button
+                type="button"
+                class="continue-course-button"
+                id="continueCourseButton">
+
+                Continue →
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    const button =
+        document.getElementById(
+            "continueCourseButton"
+        );
+
+
+    if (button) {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                showToast(
+                    "The course learning page is coming next.",
+                    "info"
                 );
 
+            }
+        );
 
-            return `
-                <div class="nexus-course-row">
+    }
 
-                    <div class="nexus-course-icon">
-                        📚
+}
+
+
+/* =========================================================
+   RECENT ACTIVITY
+========================================================= */
+
+function renderRecentActivity() {
+
+    if (!recentActivity) return;
+
+
+    const activities = [];
+
+
+    userLessonProgress
+        .slice(0, 5)
+        .forEach(item => {
+
+            activities.push({
+
+                icon:
+                    item.completed
+                        ? "✓"
+                        : "▶",
+
+                title:
+                    item.completed
+                        ? "Lesson completed"
+                        : "Lesson in progress",
+
+                date:
+                    item.updated_at ||
+                    item.started_at
+
+            });
+
+        });
+
+
+    userQuizAttempts
+        .slice(0, 5)
+        .forEach(item => {
+
+            activities.push({
+
+                icon: "📝",
+
+                title:
+                    "Quiz attempted",
+
+                date:
+                    item.completed_at ||
+                    item.started_at
+
+            });
+
+        });
+
+
+    activities.sort(
+        (a, b) =>
+            new Date(b.date || 0) -
+            new Date(a.date || 0)
+    );
+
+
+    const latest =
+        activities.slice(0, 5);
+
+
+    if (!latest.length) {
+
+        recentActivity.innerHTML = `
+
+            <div class="empty-state compact">
+
+                <div class="empty-icon">
+                    ◷
+                </div>
+
+                <h4>
+                    No recent activity
+                </h4>
+
+                <p>
+                    Your learning activity will
+                    appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    recentActivity.innerHTML = `
+
+        <div class="activity-list">
+
+            ${latest.map(item => `
+
+                <div class="activity-item">
+
+                    <div class="activity-icon">
+                        ${item.icon}
                     </div>
 
-                    <div class="nexus-course-info">
+                    <div class="activity-info">
 
                         <strong>
-                            ${escapeHTML(title)}
+                            ${escapeHTML(
+                                item.title
+                            )}
                         </strong>
 
-                        <div class="nexus-course-progress">
+                        <small>
+                            ${formatDate(
+                                item.date
+                            )}
+                        </small>
 
-                            <div
-                                class="nexus-course-progress-bar">
+                    </div>
 
-                                <span
-                                    style="width:${progress}%">
-                                </span>
+                </div>
 
-                            </div>
+            `).join("")}
 
-                           
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   BOOKMARKS
+========================================================= */
+
+function renderBookmarks() {
+
+    if (!bookmarksList) return;
+
+
+    if (!userBookmarks.length) 
