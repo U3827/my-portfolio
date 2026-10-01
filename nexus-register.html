@@ -1,51 +1,799 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Test</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Nexus | Create Account</title>
+
+    <link
+        rel="stylesheet"
+        href="nexus-register.css"
+    >
 </head>
 
 <body>
 
-    <h1>Nexus Registration Test</h1>
+    <main class="register-page">
 
-    <p id="status">
-        JavaScript has not run yet.
-    </p>
+        <div class="register-container">
 
-    <button id="testButton">
-        Test Button
-    </button>
+            <!-- BRAND -->
+            <div class="register-brand">
+
+                <a
+                    href="nexus.html"
+                    class="brand-logo"
+                >
+                    Nexus
+                </a>
+
+                <p>
+                    Learn. Build. Grow.
+                </p>
+
+            </div>
+
+
+            <!-- REGISTER CARD -->
+            <div class="register-card">
+
+                <div class="register-header">
+
+                    <h1>
+                        Create your account
+                    </h1>
+
+                    <p>
+                        Start your learning journey with Nexus.
+                    </p>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form
+                    id="registerForm"
+                    novalidate
+                >
+
+                    <!-- FULL NAME -->
+                    <div class="form-group">
+
+                        <label for="fullName">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                        >
+
+                        <small
+                            id="fullNameError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                        >
+
+                        <small
+                            id="emailError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                id="passwordToggle"
+                                class="password-toggle"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <div class="password-strength">
+
+                            <div class="strength-bar">
+
+                                <div
+                                    id="strengthFill"
+                                    class="strength-fill"
+                                ></div>
+
+                            </div>
+
+                            <small id="strengthText">
+                                Password strength
+                            </small>
+
+                        </div>
+
+                        <small
+                            id="passwordError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                id="confirmPasswordToggle"
+                                class="password-toggle"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <small
+                            id="confirmPasswordError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+                    <div class="terms-group">
+
+                        <label class="terms-label">
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                            >
+
+                            <span>
+                                I agree to the
+                                <a href="#">
+                                    Terms of Service
+                                </a>
+                                and
+                                <a href="#">
+                                    Privacy Policy
+                                </a>.
+                            </span>
+
+                        </label>
+
+                        <small
+                            id="termsError"
+                            class="form-error"
+                        ></small>
+
+                    </div>
+
+
+                    <!-- MESSAGE -->
+                    <div
+                        id="formMessage"
+                        class="form-message"
+                        role="alert"
+                    ></div>
+
+
+                    <!-- BUTTON -->
+                    <button
+                        type="submit"
+                        class="create-account-btn"
+                    >
+                        <span>
+                            Create Account
+                        </span>
+                    </button>
+
+                </form>
+
+
+                <!-- LOGIN -->
+                <div class="login-link">
+
+                    <p>
+                        Already have an account?
+
+                        <a href="nexus-login.html">
+                            Log in
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- BACK -->
+            <div class="back-link">
+
+                <a href="nexus.html">
+                    ← Back to Nexus
+                </a>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <div class="register-footer">
+
+                <p>
+                    ©
+                    <span id="year"></span>
+                    Nexus.
+                    All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         SUPABASE
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <!-- =====================================================
+         NEXUS REGISTRATION
+    ====================================================== -->
 
     <script>
 
-        console.log("NEXUS TEST JAVASCRIPT IS RUNNING");
+    document.addEventListener("DOMContentLoaded", function () {
 
-        const status =
-            document.getElementById("status");
+        console.log("NEXUS: page loaded");
+
+
+        /* =================================================
+           ELEMENTS
+        ================================================= */
+
+        const form =
+            document.getElementById("registerForm");
+
+        const nameInput =
+            document.getElementById("fullName");
+
+        const emailInput =
+            document.getElementById("email");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const confirmInput =
+            document.getElementById("confirmPassword");
+
+        const terms =
+            document.getElementById("terms");
+
+        const message =
+            document.getElementById("formMessage");
 
         const button =
-            document.getElementById("testButton");
+            document.querySelector(
+                ".create-account-btn"
+            );
 
-        status.textContent =
-            "JavaScript is working.";
+        const buttonText =
+            button.querySelector("span");
 
-        button.addEventListener(
-            "click",
+        const year =
+            document.getElementById("year");
+
+
+        /* =================================================
+           YEAR
+        ================================================= */
+
+        year.textContent =
+            new Date().getFullYear();
+
+
+        /* =================================================
+           MESSAGE
+        ================================================= */
+
+        function showMessage(text) {
+
+            message.textContent =
+                text;
+
+            console.log(
+                "NEXUS MESSAGE:",
+                text
+            );
+        }
+
+
+        /* =================================================
+           CHECK SUPABASE
+        ================================================= */
+
+        if (!window.supabase) {
+
+            showMessage(
+                "ERROR: Supabase library did not load."
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "NEXUS: Supabase library loaded"
+        );
+
+
+        /* =================================================
+           SUPABASE CONFIG
+        ================================================= */
+
+        const SUPABASE_URL =
+            "https://rjtzurluhylqvfbwajwv.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
+
+
+        /* =================================================
+           CREATE CLIENT
+        ================================================= */
+
+        const client =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
+
+
+        console.log(
+            "NEXUS: Supabase client created"
+        );
+
+
+        /* =================================================
+           PASSWORD SHOW/HIDE
+        ================================================= */
+
+        document
+            .getElementById("passwordToggle")
+            .addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        passwordInput.type ===
+                        "password"
+                    ) {
+
+                        passwordInput.type =
+                            "text";
+
+                        this.textContent =
+                            "Hide";
+
+                    } else {
+
+                        passwordInput.type =
+                            "password";
+
+                        this.textContent =
+                            "Show";
+                    }
+                }
+            );
+
+
+        document
+            .getElementById("confirmPasswordToggle")
+            .addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        confirmInput.type ===
+                        "password"
+                    ) {
+
+                        confirmInput.type =
+                            "text";
+
+                        this.textContent =
+                            "Hide";
+
+                    } else {
+
+                        confirmInput.type =
+                            "password";
+
+                        this.textContent =
+                            "Show";
+                    }
+                }
+            );
+
+
+        /* =================================================
+           PASSWORD STRENGTH
+        ================================================= */
+
+        const strengthFill =
+            document.getElementById(
+                "strengthFill"
+            );
+
+        const strengthText =
+            document.getElementById(
+                "strengthText"
+            );
+
+
+        passwordInput.addEventListener(
+            "input",
             function () {
 
-                status.textContent =
-                    "BUTTON WORKS! JavaScript is definitely running.";
+                const value =
+                    this.value;
 
-                alert(
-                    "Nexus JavaScript is working!"
-                );
+                let score = 0;
+
+                if (value.length >= 8)
+                    score++;
+
+                if (/[A-Z]/.test(value))
+                    score++;
+
+                if (/[a-z]/.test(value))
+                    score++;
+
+                if (/[0-9]/.test(value))
+                    score++;
+
+                if (/[^A-Za-z0-9]/.test(value))
+                    score++;
+
+
+                if (!value) {
+
+                    strengthFill.style.width =
+                        "0%";
+
+                    strengthText.textContent =
+                        "Password strength";
+
+                } else if (score <= 2) {
+
+                    strengthFill.style.width =
+                        "33%";
+
+                    strengthText.textContent =
+                        "Weak password";
+
+                } else if (score <= 4) {
+
+                    strengthFill.style.width =
+                        "66%";
+
+                    strengthText.textContent =
+                        "Medium password";
+
+                } else {
+
+                    strengthFill.style.width =
+                        "100%";
+
+                    strengthText.textContent =
+                        "Strong password";
+                }
 
             }
         );
 
+
+        /* =================================================
+           REGISTRATION
+        ================================================= */
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                console.log(
+                    "NEXUS: submit clicked"
+                );
+
+
+                /* -----------------------------------------
+                   VALUES
+                ----------------------------------------- */
+
+                const fullName =
+                    nameInput.value.trim();
+
+                const email =
+                    emailInput.value
+                        .trim()
+                        .toLowerCase();
+
+                const password =
+                    passwordInput.value;
+
+                const confirmPassword =
+                    confirmInput.value;
+
+
+                /* -----------------------------------------
+                   VALIDATION
+                ----------------------------------------- */
+
+                if (!fullName) {
+
+                    showMessage(
+                        "Please enter your full name."
+                    );
+
+                    return;
+                }
+
+
+                if (!email) {
+
+                    showMessage(
+                        "Please enter your email."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                        .test(email)
+                ) {
+
+                    showMessage(
+                        "Please enter a valid email address."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    password.length < 8
+                ) {
+
+                    showMessage(
+                        "Password must be at least 8 characters."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    showMessage(
+                        "Passwords do not match."
+                    );
+
+                    return;
+                }
+
+
+                if (!terms.checked) {
+
+                    showMessage(
+                        "Please accept the Terms of Service and Privacy Policy."
+                    );
+
+                    return;
+                }
+
+
+                /* -----------------------------------------
+                   START
+                ----------------------------------------- */
+
+                button.disabled =
+                    true;
+
+                buttonText.textContent =
+                    "Creating Account...";
+
+                showMessage(
+                    "Connecting to Nexus..."
+                );
+
+
+                try {
+
+                    console.log(
+                        "NEXUS: sending signUp request"
+                    );
+
+
+                    const response =
+                        await client.auth.signUp({
+
+                            email:
+                                email,
+
+                            password:
+                                password,
+
+                            options: {
+
+                                data: {
+                                    full_name:
+                                        fullName
+                                }
+
+                            }
+
+                        });
+
+
+                    console.log(
+                        "NEXUS: Supabase response",
+                        response
+                    );
+
+
+                    /* -------------------------------------
+                       ERROR
+                    ------------------------------------- */
+
+                    if (response.error) {
+
+                        showMessage(
+                            "Supabase error: " +
+                            response.error.message
+                        );
+
+                        return;
+                    }
+
+
+                    /* -------------------------------------
+                       SUCCESS
+                    ------------------------------------- */
+
+                    if (
+                        response.data &&
+                        response.data.user
+                    ) {
+
+                        if (
+                            response.data.session
+                        ) {
+
+                            showMessage(
+                                "Account created successfully. You can now log in."
+                            );
+
+                        } else {
+
+                            showMessage(
+                                "Account created! Please check your email and confirm your account before logging in."
+                            );
+                        }
+
+                        form.reset();
+
+                    } else {
+
+                        showMessage(
+                            "No user was returned by Supabase."
+                        );
+                    }
+
+
+                } catch (error) {
+
+                    console.error(
+                        "NEXUS ERROR:",
+                        error
+                    );
+
+                    showMessage(
+                        "Connection error: " +
+                        error.message
+                    );
+
+
+                } finally {
+
+                    button.disabled =
+                        false;
+
+                    buttonText.textContent =
+                        "Create Account";
+                }
+
+            }
+        );
+
+
+        console.log(
+            "NEXUS: registration system ready"
+        );
+
+    });
+
     </script>
 
 </body>
+
 </html>
