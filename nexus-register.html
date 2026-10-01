@@ -333,7 +333,6 @@
                                 type="button"
                                 id="passwordToggle"
                                 class="password-toggle"
-                                aria-label="Show password"
                             >
                                 Show
                             </button>
@@ -399,7 +398,6 @@
                                 type="button"
                                 id="confirmPasswordToggle"
                                 class="password-toggle"
-                                aria-label="Show password"
                             >
                                 Show
                             </button>
@@ -438,13 +436,19 @@
 
                                 I agree to the
 
-                                <a href="#">
+                                <a
+                                    href="#"
+                                    id="termsLink"
+                                >
                                     Terms of Service
                                 </a>
 
                                 and
 
-                                <a href="#">
+                                <a
+                                    href="#"
+                                    id="privacyLink"
+                                >
                                     Privacy Policy
                                 </a>.
 
@@ -532,6 +536,113 @@
 
 
     <!-- =================================================
+         TERMS / PRIVACY MODAL
+    ================================================== -->
+
+    <div
+        id="legalModal"
+        style="
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:9999;
+            background:rgba(0,0,0,0.78);
+            padding:20px;
+            align-items:center;
+            justify-content:center;
+        "
+    >
+
+        <div
+            style="
+                width:100%;
+                max-width:620px;
+                max-height:85vh;
+                overflow-y:auto;
+                background:#101827;
+                border:1px solid rgba(255,255,255,0.08);
+                border-radius:18px;
+                padding:28px;
+                color:#f5f7fb;
+                box-shadow:0 25px 70px rgba(0,0,0,0.45);
+            "
+        >
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    gap:20px;
+                    margin-bottom:20px;
+                "
+            >
+
+                <h2
+                    id="legalTitle"
+                    style="
+                        margin:0;
+                        font-size:24px;
+                    "
+                >
+                    Terms of Service
+                </h2>
+
+
+                <button
+                    type="button"
+                    id="closeLegal"
+                    style="
+                        border:none;
+                        background:transparent;
+                        color:#8b85ff;
+                        font-size:24px;
+                        cursor:pointer;
+                    "
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div
+                id="legalContent"
+                style="
+                    color:#8e9aaf;
+                    font-size:14px;
+                    line-height:1.8;
+                "
+            ></div>
+
+
+            <button
+                type="button"
+                id="legalAgree"
+                style="
+                    width:100%;
+                    margin-top:24px;
+                    padding:13px 18px;
+                    border:none;
+                    border-radius:10px;
+                    background:linear-gradient(135deg,#6c63ff,#5b8cff);
+                    color:white;
+                    font-size:14px;
+                    font-weight:800;
+                    cursor:pointer;
+                "
+            >
+                I Understand
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
          SUPABASE
     ================================================== -->
 
@@ -601,16 +712,6 @@
                     "span"
                 );
 
-            const strengthFill =
-                document.getElementById(
-                    "strengthFill"
-                );
-
-            const strengthText =
-                document.getElementById(
-                    "strengthText"
-                );
-
 
             /* =================================================
                ERROR ELEMENTS
@@ -673,20 +774,16 @@
                 );
 
 
-
             /* =================================================
                MESSAGE
             ================================================== */
 
-            function showMessage(
-                text
-            ) {
+            function showMessage(text) {
 
                 formMessage.textContent =
                     text;
 
             }
-
 
 
             /* =================================================
@@ -698,9 +795,17 @@
                 button
             ) {
 
+                if (!input || !button) {
+                    return;
+                }
+
+
                 button.addEventListener(
                     "click",
-                    function () {
+                    function (event) {
+
+                        event.preventDefault();
+
 
                         if (
                             input.type ===
@@ -713,6 +818,11 @@
                             button.textContent =
                                 "Hide";
 
+                            button.setAttribute(
+                                "aria-label",
+                                "Hide password"
+                            );
+
                         } else {
 
                             input.type =
@@ -720,6 +830,11 @@
 
                             button.textContent =
                                 "Show";
+
+                            button.setAttribute(
+                                "aria-label",
+                                "Show password"
+                            );
 
                         }
 
@@ -750,12 +865,36 @@
                PASSWORD STRENGTH
             ================================================== */
 
+            const strengthFill =
+                document.getElementById(
+                    "strengthFill"
+                );
+
+            const strengthText =
+                document.getElementById(
+                    "strengthText"
+                );
+
+
             passwordInput.addEventListener(
                 "input",
                 function () {
 
                     const value =
                         passwordInput.value;
+
+
+                    if (!value) {
+
+                        strengthFill.style.width =
+                            "0%";
+
+                        strengthText.textContent =
+                            "Password strength";
+
+                        return;
+                    }
+
 
                     let score = 0;
 
@@ -795,23 +934,13 @@
                     }
 
 
-                    if (!value) {
-
-                        strengthFill.style.width =
-                            "0%";
-
-                        strengthText.textContent =
-                            "Password strength";
-
-                    } else if (
-                        score <= 2
-                    ) {
+                    if (score <= 2) {
 
                         strengthFill.style.width =
                             "33%";
 
                         strengthText.textContent =
-                            "Weak password";
+                            "Weak";
 
                     } else if (
                         score <= 4
@@ -821,7 +950,7 @@
                             "66%";
 
                         strengthText.textContent =
-                            "Medium password";
+                            "Medium";
 
                     } else {
 
@@ -829,7 +958,7 @@
                             "100%";
 
                         strengthText.textContent =
-                            "Strong password";
+                            "Strong";
 
                     }
 
@@ -848,4 +977,523 @@
                     "";
 
                 emailError.textContent =
- 
+                    "";
+
+                passwordError.textContent =
+                    "";
+
+                confirmPasswordError.textContent =
+                    "";
+
+                termsError.textContent =
+                    "";
+
+
+                document
+                    .querySelectorAll(
+                        ".input-wrapper"
+                    )
+                    .forEach(
+                        function (wrapper) {
+
+                            wrapper.classList.remove(
+                                "has-error"
+                            );
+
+                            wrapper.classList.remove(
+                                "has-success"
+                            );
+
+                        }
+                    );
+
+            }
+
+
+
+            /* =================================================
+               TERMS / PRIVACY MODAL
+            ================================================== */
+
+            const legalModal =
+                document.getElementById(
+                    "legalModal"
+                );
+
+            const legalTitle =
+                document.getElementById(
+                    "legalTitle"
+                );
+
+            const legalContent =
+                document.getElementById(
+                    "legalContent"
+                );
+
+            const termsLink =
+                document.getElementById(
+                    "termsLink"
+                );
+
+            const privacyLink =
+                document.getElementById(
+                    "privacyLink"
+                );
+
+            const closeLegal =
+                document.getElementById(
+                    "closeLegal"
+                );
+
+            const legalAgree =
+                document.getElementById(
+                    "legalAgree"
+                );
+
+
+            function openLegal(
+                type
+            ) {
+
+                if (
+                    type ===
+                    "terms"
+                ) {
+
+                    legalTitle.textContent =
+                        "Terms of Service";
+
+
+                    legalContent.innerHTML = `
+
+                        <p>
+                            Welcome to Nexus. By creating an
+                            account, you agree to use the platform
+                            responsibly and provide accurate
+                            information.
+                        </p>
+
+                        <p>
+                            Nexus is intended for learning,
+                            development and educational purposes.
+                            Users must not misuse the platform,
+                            attempt unauthorized access or interfere
+                            with the service.
+                        </p>
+
+                        <p>
+                            Your account belongs to you. Keep your
+                            login information secure and do not share
+                            your password with others.
+                        </p>
+
+                        <p>
+                            These terms may be updated as Nexus
+                            develops. Continued use of the platform
+                            after an update means you accept the
+                            updated terms.
+                        </p>
+
+                    `;
+
+                } else {
+
+                    legalTitle.textContent =
+                        "Privacy Policy";
+
+
+                    legalContent.innerHTML = `
+
+                        <p>
+                            Nexus respects your privacy.
+                        </p>
+
+                        <p>
+                            When you create an account, Nexus stores
+                            information needed to provide your account
+                            and learning services, such as your name
+                            and email address.
+                        </p>
+
+                        <p>
+                            Your password is handled by the
+                            authentication service and is not stored
+                            directly by the Nexus website.
+                        </p>
+
+                        <p>
+                            Nexus will use account information to
+                            provide authentication, learning,
+                            progress tracking and other platform
+                            features.
+                        </p>
+
+                        <p>
+                            We will continue improving this privacy
+                            policy as the Nexus platform develops.
+                        </p>
+
+                    `;
+                }
+
+
+                legalModal.style.display =
+                    "flex";
+
+
+                document.body.style.overflow =
+                    "hidden";
+
+            }
+
+
+            function closeLegalModal() {
+
+                legalModal.style.display =
+                    "none";
+
+                document.body.style.overflow =
+                    "";
+
+            }
+
+
+            termsLink.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    openLegal(
+                        "terms"
+                    );
+
+                }
+            );
+
+
+            privacyLink.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    openLegal(
+                        "privacy"
+                    );
+
+                }
+            );
+
+
+            closeLegal.addEventListener(
+                "click",
+                closeLegalModal
+            );
+
+
+            legalAgree.addEventListener(
+                "click",
+                closeLegalModal
+            );
+
+
+            legalModal.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target ===
+                        legalModal
+                    ) {
+
+                        closeLegalModal();
+
+                    }
+
+                }
+            );
+
+
+
+            /* =================================================
+               FORM SUBMISSION
+            ================================================== */
+
+            form.addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+
+                    clearErrors();
+
+                    showMessage("");
+
+
+                    const fullName =
+                        fullNameInput.value.trim();
+
+                    const email =
+                        emailInput.value
+                            .trim()
+                            .toLowerCase();
+
+                    const password =
+                        passwordInput.value;
+
+                    const confirmPassword =
+                        confirmPasswordInput.value;
+
+
+
+                    /* -----------------------------------------
+                       FULL NAME
+                    ----------------------------------------- */
+
+                    if (!fullName) {
+
+                        fullNameError.textContent =
+                            "Please enter your full name.";
+
+                        fullNameInput.focus();
+
+                        return;
+                    }
+
+
+
+                    /* -----------------------------------------
+                       EMAIL
+                    ----------------------------------------- */
+
+                    if (!email) {
+
+                        emailError.textContent =
+                            "Please enter your email address.";
+
+                        emailInput.focus();
+
+                        return;
+                    }
+
+
+                    if (
+                        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                            .test(email)
+                    ) {
+
+                        emailError.textContent =
+                            "Please enter a valid email address.";
+
+                        emailInput.focus();
+
+                        return;
+                    }
+
+
+
+                    /* -----------------------------------------
+                       PASSWORD
+                    ----------------------------------------- */
+
+                    if (
+                        password.length < 8
+                    ) {
+
+                        passwordError.textContent =
+                            "Password must be at least 8 characters.";
+
+                        passwordInput.focus();
+
+                        return;
+                    }
+
+
+
+                    /* -----------------------------------------
+                       CONFIRM PASSWORD
+                    ----------------------------------------- */
+
+                    if (
+                        password !==
+                        confirmPassword
+                    ) {
+
+                        confirmPasswordError.textContent =
+                            "Passwords do not match.";
+
+                        confirmPasswordInput.focus();
+
+                        return;
+                    }
+
+
+
+                    /* -----------------------------------------
+                       TERMS — REQUIRED
+                    ----------------------------------------- */
+
+                    if (!terms.checked) {
+
+                        termsError.textContent =
+                            "Please tick the box to agree to the Terms of Service and Privacy Policy.";
+
+                        showMessage(
+                            "Please agree to the Terms of Service and Privacy Policy before creating your account."
+                        );
+
+                        terms.focus();
+
+                        return;
+                    }
+
+
+
+                    /* -----------------------------------------
+                       START REGISTRATION
+                    ----------------------------------------- */
+
+                    submitButton.disabled =
+                        true;
+
+                    submitText.textContent =
+                        "Creating Account...";
+
+
+                    showMessage(
+                        "Creating your Nexus account..."
+                    );
+
+
+                    try {
+
+
+                        /* -------------------------------------
+                           SUPABASE SIGN UP
+                        ------------------------------------- */
+
+                        const {
+                            data,
+                            error
+                        } =
+                            await supabase.auth.signUp({
+
+                                email:
+                                    email,
+
+                                password:
+                                    password,
+
+                                options: {
+
+                                    data: {
+
+                                        full_name:
+                                            fullName
+
+                                    }
+
+                                }
+
+                            });
+
+
+                        /* -------------------------------------
+                           ERROR
+                        ------------------------------------- */
+
+                        if (error) {
+
+                            console.error(
+                                "Nexus registration error:",
+                                error
+                            );
+
+
+                            showMessage(
+                                "Registration error: " +
+                                error.message
+                            );
+
+                            return;
+                        }
+
+
+
+                        /* -------------------------------------
+                           SUCCESS
+                        ------------------------------------- */
+
+                        if (
+                            data &&
+                            data.user
+                        ) {
+
+                            showMessage(
+                                "Account created successfully. You can now log in."
+                            );
+
+
+                            form.reset();
+
+
+                            strengthFill.style.width =
+                                "0%";
+
+
+                            strengthText.textContent =
+                                "Password strength";
+
+
+                        } else {
+
+                            showMessage(
+                                "Registration completed, but no user was returned."
+                            );
+
+                        }
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Nexus registration exception:",
+                            error
+                        );
+
+
+                        showMessage(
+                            "Connection error: " +
+                            (
+                                error.message ||
+                                "Unable to connect to Supabase."
+                            )
+                        );
+
+
+                    } finally {
+
+                        submitButton.disabled =
+                            false;
+
+                        submitText.textContent =
+                            "Create Account";
+
+                    }
+
+                }
+            );
+
+
+        }
+
+    );
+
+    </script>
+
+
+</body>
+
+</html>
