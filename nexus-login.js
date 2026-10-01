@@ -1,378 +1,111 @@
-document.addEventListener("DOMContentLoaded", () => {
+const SUPABASE_URL = "https://rjtzurluhylqvfbwajwv.supabase.co";
 
-/* =========================================
-   SUPABASE
-========================================= */
+// Use the SAME publishable key already used in your registration file.
+const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_EXISTING_PUBLISHABLE_KEY_HERE";
 
-const SUPABASE_URL =
-    "https://rjtzurluhylqvfbwajwv.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
-
-const supabase =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
-const loginForm =
-    document.getElementById("loginForm");
-
-const email =
-    document.getElementById("email");
-
-const password =
-    document.getElementById("password");
-
-const passwordToggle =
-    document.getElementById("passwordToggle");
-
-const loginButton =
-    document.getElementById("loginButton");
-
-const loginButtonText =
-    document.getElementById("loginButtonText");
-
-const formMessage =
-    document.getElementById("formMessage");
-
-const emailError =
-    document.getElementById("emailError");
-
-const passwordError =
-    document.getElementById("passwordError");
-
-const forgotPassword =
-    document.getElementById("forgotPassword");
-
-
-/* =========================================
-   MESSAGE
-========================================= */
-
-function showMessage(message, type) {
-
-    formMessage.textContent =
-        message;
-
-    if (type === "success") {
-
-        formMessage.style.color =
-            "#42d392";
-
-    } else if (type === "error") {
-
-        formMessage.style.color =
-            "#ff6b81";
-
-    } else {
-
-        formMessage.style.color =
-            "#8e9aaf";
-    }
-
-}
-
-
-/* =========================================
-   CLEAR ERRORS
-========================================= */
-
-function clearErrors() {
-
-    emailError.textContent = "";
-    passwordError.textContent = "";
-    formMessage.textContent = "";
-
-    email
-        .closest(".input-wrapper")
-        ?.classList.remove(
-            "has-error",
-            "has-success"
-        );
-
-    password
-        .closest(".input-wrapper")
-        ?.classList.remove(
-            "has-error",
-            "has-success"
-        );
-
-}
-
-
-/* =========================================
-   PASSWORD VISIBILITY
-========================================= */
-
-passwordToggle.addEventListener(
-    "click",
-    () => {
-
-        if (password.type === "password") {
-
-            password.type = "text";
-
-            passwordToggle.textContent =
-                "Hide";
-
-        } else {
-
-            password.type = "password";
-
-            passwordToggle.textContent =
-                "Show";
-        }
-
-    }
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
 );
 
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const passwordToggle = document.getElementById("passwordToggle");
+const messageBox = document.getElementById("message");
+const loginButton = loginForm.querySelector("button[type='submit']");
 
-/* =========================================
-   LOGIN
-========================================= */
+// Show / hide password
+if (passwordToggle) {
+    passwordToggle.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
 
-loginForm.addEventListener(
-    "submit",
-    async event => {
+        passwordInput.type = isPassword ? "text" : "password";
 
-        event.preventDefault();
+        passwordToggle.textContent = isPassword ? "Hide" : "Show";
+    });
+}
 
-        clearErrors();
+// Login
+loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
-        const emailValue =
-            email.value.trim();
+    if (!email || !password) {
+        showMessage("Please enter your email and password.", "error");
+        return;
+    }
 
-        const passwordValue =
-            password.value;
+    setLoading(true);
+    showMessage("Signing you in...", "info");
 
-
-        /* VALIDATION */
-
-        let valid = true;
-
-
-        if (!emailValue) {
-
-            emailError.textContent =
-                "Please enter your email address.";
-
-            email
-                .closest(".input-wrapper")
-                ?.classList.add("has-error");
-
-            valid = false;
-
-        } else if (
-            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                .test(emailValue)
-        ) {
-
-            emailError.textContent =
-                "Please enter a valid email address.";
-
-            email
-                .closest(".input-wrapper")
-                ?.classList.add("has-error");
-
-            valid = false;
-        }
-
-
-        if (!passwordValue) {
-
-            passwordError.textContent =
-                "Please enter your password.";
-
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
             password
-                .closest(".input-wrapper")
-                ?.classList.add("has-error");
+        });
 
-            valid = false;
-        }
-
-
-        if (!valid) {
-            return;
-        }
-
-
-        /* LOADING */
-
-        loginButton.disabled =
-            true;
-
-        loginButton.style.opacity =
-            "0.7";
-
-        loginButtonText.textContent =
-            "Logging in...";
-
-
-        try {
-
-            const {
-                data,
-                error
-            } = await supabase.auth.signInWithPassword({
-
-                email: emailValue,
-
-                password: passwordValue
-
-            });
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            if (!data || !data.user) {
-
-                throw new Error(
-                    "Login could not be completed. Please try again."
-                );
-
-            }
-
-
-            console.log(
-                "Nexus login successful:",
-                data.user
-            );
-
+        if (error) {
+            console.error("Login error:", error);
 
             showMessage(
-                "Login successful. Welcome back!",
-                "success"
-            );
-
-
-            /*
-             * Dashboard will be created next.
-             *
-             * For now we do not redirect
-             * because the dashboard does
-             * not exist yet.
-             */
-
-        } catch (error) {
-
-            console.error(
-                "Nexus login error:",
-                error
-            );
-
-
-            let message =
-                "Unable to log in. Please try again.";
-
-
-            if (
-                error.message
-                    ?.toLowerCase()
-                    .includes("invalid login credentials")
-            ) {
-
-                message =
-                    "Incorrect email or password.";
-
-            } else if (
-                error.message
-                    ?.toLowerCase()
-                    .includes("email not confirmed")
-            ) {
-
-                message =
-                    "Please confirm your email before logging in.";
-
-            } else if (
-                error.message
-            ) {
-
-                message =
-                    error.message;
-            }
-
-
-            showMessage(
-                message,
+                error.message || "Unable to sign in. Please check your details.",
                 "error"
             );
 
-        } finally {
-
-            loginButton.disabled =
-                false;
-
-            loginButton.style.opacity =
-                "1";
-
-            loginButtonText.textContent =
-                "Log In";
+            setLoading(false);
+            return;
         }
 
-    }
-);
+        if (!data.session) {
+            showMessage(
+                "Login completed, but no active session was created.",
+                "error"
+            );
 
+            setLoading(false);
+            return;
+        }
 
-/* =========================================
-   FORGOT PASSWORD
-========================================= */
+        showMessage("Login successful. Welcome back!", "success");
 
-forgotPassword.addEventListener(
-    "click",
-    event => {
+        // Give the success message a moment to appear,
+        // then move the user to the Nexus dashboard.
+        setTimeout(() => {
+            window.location.href = "nexus-dashboard.html";
+        }, 700);
 
-        event.preventDefault();
+    } catch (error) {
+        console.error("Unexpected login error:", error);
 
         showMessage(
-            "Password recovery will be added next.",
-            "info"
+            "Something went wrong while logging in. Please try again.",
+            "error"
         );
 
+        setLoading(false);
     }
-);
+});
 
+function setLoading(isLoading) {
+    if (!loginButton) return;
 
-/* =========================================
-   CHECK EXISTING SESSION
-========================================= */
+    loginButton.disabled = isLoading;
 
-async function checkSession() {
-
-    const {
-        data
-    } = await supabase.auth.getSession();
-
-
-    if (
-        data &&
-        data.session
-    ) {
-
-        console.log(
-            "Existing Nexus session found."
-        );
-
-        /*
-         * We will redirect authenticated
-         * users to the Dashboard once
-         * the Dashboard is ready.
-         */
+    if (isLoading) {
+        loginButton.dataset.originalText = loginButton.textContent;
+        loginButton.textContent = "Signing in...";
+    } else {
+        loginButton.textContent =
+            loginButton.dataset.originalText || "Log In";
     }
-
 }
 
+function showMessage(message, type = "info") {
+    if (!messageBox) return;
 
-checkSession();
-
-});
+    messageBox.textContent = message;
+    messageBox.className = `message ${type}`;
+}
