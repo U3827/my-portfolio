@@ -1,317 +1,356 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+document.addEventListener("DOMContentLoaded", () => {
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+/* =========================================
+   SUPABASE CONFIGURATION
+========================================= */
 
-    <meta
-        name="description"
-        content="Log in to your Nexus learning and developer platform account."
-    >
+const SUPABASE_URL =
+    "https://rjtzurluhylqvfbwajwv.supabase.co";
 
-    <title>Log In | Nexus</title>
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
 
-    <link
-        rel="stylesheet"
-        href="nexus-login.css"
-    >
-</head>
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
-<body>
 
-    <main class="auth-page">
+/* =========================================
+   ELEMENTS
+========================================= */
 
-        <!-- LEFT SIDE -->
+const loginForm =
+    document.getElementById("loginForm");
 
-        <section class="auth-intro">
+const email =
+    document.getElementById("email");
 
-            <a href="nexus.html" class="brand">
-                <span class="brand-icon">N</span>
-                <span>Nexus</span>
-            </a>
+const password =
+    document.getElementById("password");
 
-            <div class="intro-content">
+const loginButton =
+    document.getElementById("loginButton");
 
-                <span class="intro-badge">
-                    WELCOME BACK
-                </span>
+const loginButtonText =
+    document.getElementById("loginButtonText");
 
-                <h1>
-                    Keep
-                    <span>building.</span>
-                </h1>
+const formMessage =
+    document.getElementById("formMessage");
 
-                <p>
-                    Continue your learning journey, pick up
-                    where you left off and keep making progress
-                    with Nexus.
-                </p>
+const passwordToggle =
+    document.getElementById("passwordToggle");
 
-                <div class="intro-points">
 
-                    <div class="intro-point">
-                        <span>01</span>
+/* =========================================
+   CHECK REQUIRED ELEMENTS
+========================================= */
 
-                        <div>
-                            <strong>
-                                Continue Learning
-                            </strong>
+if (!loginForm || !email || !password) {
 
-                            <small>
-                                Return to your courses and lessons.
-                            </small>
-                        </div>
-                    </div>
+    console.error(
+        "Nexus Login: Required form elements were not found."
+    );
 
-                    <div class="intro-point">
-                        <span>02</span>
+    return;
+}
 
-                        <div>
-                            <strong>
-                                Track Progress
-                            </strong>
 
-                            <small>
-                                See how far you have come.
-                            </small>
-                        </div>
-                    </div>
+/* =========================================
+   PASSWORD SHOW / HIDE
+========================================= */
 
-                    <div class="intro-point">
-                        <span>03</span>
+if (passwordToggle) {
 
-                        <div>
-                            <strong>
-                                Build More
-                            </strong>
+    passwordToggle.addEventListener(
+        "click",
+        () => {
 
-                            <small>
-                                Turn knowledge into practical skills.
-                            </small>
-                        </div>
-                    </div>
+            if (password.type === "password") {
 
-                </div>
+                password.type = "text";
 
-            </div>
+                passwordToggle.textContent =
+                    "Hide";
 
-            <div class="intro-footer">
-                © <span id="year"></span> Nexus
-            </div>
+            } else {
 
-        </section>
+                password.type = "password";
 
+                passwordToggle.textContent =
+                    "Show";
+            }
 
-        <!-- RIGHT SIDE -->
+        }
+    );
 
-        <section class="auth-form-section">
+}
 
-            <div class="auth-card">
 
-                <div class="mobile-brand">
+/* =========================================
+   MESSAGE
+========================================= */
 
-                    <a href="nexus.html" class="brand">
-                        <span class="brand-icon">N</span>
-                        <span>Nexus</span>
-                    </a>
+function showMessage(message, type) {
 
-                </div>
+    if (!formMessage) {
+        return;
+    }
 
+    formMessage.textContent =
+        message;
 
-                <div class="form-header">
+    if (type === "success") {
 
-                    <span class="form-label">
-                        SIGN IN
-                    </span>
+        formMessage.style.color =
+            "#42d392";
 
-                    <h2>
-                        Welcome back
-                    </h2>
+    } else if (type === "error") {
 
-                    <p>
-                        Log in to continue your Nexus journey.
-                    </p>
+        formMessage.style.color =
+            "#ff6b81";
 
-                </div>
+    } else {
 
+        formMessage.style.color =
+            "#8e9aaf";
+    }
 
-                <!-- LOGIN FORM -->
+}
 
-                <form
-                    id="loginForm"
-                    class="login-form"
-                    novalidate
-                >
 
-                    <!-- EMAIL -->
+/* =========================================
+   LOGIN
+========================================= */
 
-                    <div class="form-group">
+loginForm.addEventListener(
+    "submit",
+    async event => {
 
-                        <label for="email">
-                            Email Address
-                        </label>
+        event.preventDefault();
 
-                        <div class="input-wrapper">
+        showMessage("", "");
 
-                            <span class="input-icon">
-                                @
-                            </span>
+        const emailValue =
+            email.value.trim();
 
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="you@example.com"
-                                autocomplete="email"
-                                required
-                            >
+        const passwordValue =
+            password.value;
 
-                        </div>
 
-                        <small
-                            class="error-message"
-                            id="emailError"
-                        ></small>
+        /* Basic validation */
 
-                    </div>
+        if (!emailValue) {
 
+            showMessage(
+                "Please enter your email address.",
+                "error"
+            );
 
-                    <!-- PASSWORD -->
+            email.focus();
 
-                    <div class="form-group">
+            return;
+        }
 
-                        <div class="password-label">
 
-                            <label for="password">
-                                Password
-                            </label>
+        if (!passwordValue) {
 
-                            <a
-                                href="#"
-                                id="forgotPassword"
-                            >
-                                Forgot password?
-                            </a>
+            showMessage(
+                "Please enter your password.",
+                "error"
+            );
 
-                        </div>
+            password.focus();
 
-                        <div class="input-wrapper">
+            return;
+        }
 
-                            <span class="input-icon">
-                                🔒
-                            </span>
 
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="Enter your password"
-                                autocomplete="current-password"
-                                required
-                            >
+        /* Loading state */
 
-                            <button
-                                type="button"
-                                class="password-toggle"
-                                id="passwordToggle"
-                                aria-label="Show password"
-                            >
-                                Show
-                            </button>
+        if (loginButton) {
 
-                        </div>
+            loginButton.disabled =
+                true;
 
-                        <small
-                            class="error-message"
-                            id="passwordError"
-                        ></small>
+            loginButton.style.opacity =
+                "0.7";
 
-                    </div>
+        }
 
+        if (loginButtonText) {
 
-                    <!-- REMEMBER -->
+            loginButtonText.textContent =
+                "Logging in...";
 
-                    <div class="remember-row">
+        }
 
-                        <label class="checkbox-label">
 
-                            <input
-                                type="checkbox"
-                                id="remember"
-                                name="remember"
-                            >
+        try {
 
-                            <span class="custom-checkbox"></span>
+            const {
+                data,
+                error
+            } =
+                await supabase.auth.signInWithPassword({
 
-                            <span>
-                                Remember me
-                            </span>
+                    email: emailValue,
 
-                        </label>
+                    password: passwordValue
 
-                    </div>
+                });
 
 
-                    <!-- LOGIN BUTTON -->
+            if (error) {
+                throw error;
+            }
 
-                    <button
-                        type="submit"
-                        class="login-btn"
-                    >
 
-                        <span>
-                            Log In
-                        </span>
+            if (!data || !data.user) {
 
-                        <span class="arrow">
-                            →
-                        </span>
+                throw new Error(
+                    "Login was not completed. Please try again."
+                );
 
-                    </button>
+            }
 
 
-                    <div
-                        class="form-message"
-                        id="formMessage"
-                    ></div>
+            console.log(
+                "Nexus login successful:",
+                data.user.email
+            );
 
-                </form>
 
+            showMessage(
+                "Login successful. Opening your dashboard...",
+                "success"
+            );
 
-                <!-- REGISTER -->
 
-                <div class="register-link">
+            /*
+             * Give the user a short moment
+             * to see the success message.
+             */
 
-                    Don't have an account?
+            setTimeout(() => {
 
-                    <a href="nexus-register.html">
-                        Create one
-                    </a>
+                window.location.href =
+                    "nexus-dashboard.html";
 
-                </div>
+            }, 800);
 
 
-                <!-- BACK -->
+        } catch (error) {
 
-                <a
-                    href="nexus.html"
-                    class="back-link"
-                >
-                    ← Back to Nexus
-                </a>
+            console.error(
+                "Nexus login error:",
+                error
+            );
 
-            </div>
 
-        </section>
+            let message =
+                "Unable to log in. Please try again.";
 
-    </main>
 
+            if (
+                error.message &&
+                error.message.toLowerCase()
+                    .includes("invalid login credentials")
+            ) {
 
-    <script src="nexus-login.js"></script>
+                message =
+                    "Incorrect email or password.";
 
-</body>
-  </html>
+            } else if (
+                error.message &&
+                error.message.toLowerCase()
+                    .includes("email not confirmed")
+            ) {
+
+                message =
+                    "Please confirm your email before logging in.";
+
+            } else if (
+                error.message
+            ) {
+
+                message =
+                    error.message;
+            }
+
+
+            showMessage(
+                message,
+                "error"
+            );
+
+
+        } finally {
+
+            if (loginButton) {
+
+                loginButton.disabled =
+                    false;
+
+                loginButton.style.opacity =
+                    "1";
+
+            }
+
+            if (loginButtonText) {
+
+                loginButtonText.textContent =
+                    "Log In";
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   CHECK EXISTING SESSION
+========================================= */
+
+async function checkExistingSession() {
+
+    try {
+
+        const {
+            data
+        } =
+            await supabase.auth.getSession();
+
+
+        if (
+            data &&
+            data.session &&
+            data.session.user
+        ) {
+
+            /*
+             * User is already logged in.
+             * Send them directly to Dashboard.
+             */
+
+            window.location.href =
+                "nexus-dashboard.html";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Nexus session check error:",
+            error
+        );
+
+    }
+
+}
+
+
+checkExistingSession();
+
+});
