@@ -1,6 +1,6 @@
 /* =========================================================
    NEXUS REGISTRATION
-   Supabase Authentication
+   SUPABASE AUTHENTICATION
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,16 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const SUPABASE_PUBLISHABLE_KEY =
         "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
 
-    const { createClient } = window.supabase;
-
-    const supabase = createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
 
     /* =====================================================
-       ELEMENTS
+       PAGE ELEMENTS
     ===================================================== */
 
     const registerForm =
@@ -61,25 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("formMessage");
 
     const submitButton =
-        registerForm.querySelector(
-            ".create-account-btn"
-        );
+        document.querySelector(".create-account-btn");
 
     const submitText =
-        submitButton.querySelector("span");
+        submitButton
+            ? submitButton.querySelector("span")
+            : null;
 
     const year =
         document.getElementById("year");
-
-
-    /* =====================================================
-       CURRENT YEAR
-    ===================================================== */
-
-    if (year) {
-        year.textContent =
-            new Date().getFullYear();
-    }
 
 
     /* =====================================================
@@ -103,99 +86,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       HELPER: CLEAR ERRORS
+       CURRENT YEAR
     ===================================================== */
 
-    function clearErrors() {
-
-        fullNameError.textContent = "";
-        emailError.textContent = "";
-        passwordError.textContent = "";
-        confirmPasswordError.textContent = "";
-        termsError.textContent = "";
-
-        formMessage.textContent = "";
-
-        fullName.classList.remove("input-error");
-        email.classList.remove("input-error");
-        password.classList.remove("input-error");
-        confirmPassword.classList.remove("input-error");
+    if (year) {
+        year.textContent =
+            new Date().getFullYear();
     }
 
 
     /* =====================================================
-       HELPER: EMAIL VALIDATION
+       MESSAGE FUNCTIONS
     ===================================================== */
 
-    function isValidEmail(value) {
+    function showMessage(message) {
 
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-            .test(value);
+        if (formMessage) {
+            formMessage.textContent = message;
+        }
     }
 
 
-    /* =====================================================
-       PASSWORD STRENGTH
-    ===================================================== */
+    function clearMessage() {
 
-    function checkPasswordStrength(value) {
-
-        let score = 0;
-
-        if (value.length >= 8) {
-            score++;
-        }
-
-        if (/[A-Z]/.test(value)) {
-            score++;
-        }
-
-        if (/[a-z]/.test(value)) {
-            score++;
-        }
-
-        if (/[0-9]/.test(value)) {
-            score++;
-        }
-
-        if (/[^A-Za-z0-9]/.test(value)) {
-            score++;
-        }
-
-
-        if (!value) {
-
-            strengthFill.style.width = "0%";
-            strengthText.textContent =
-                "Password strength";
-
-            return;
-        }
-
-
-        if (score <= 2) {
-
-            strengthFill.style.width = "33%";
-            strengthText.textContent =
-                "Weak password";
-
-        } else if (score <= 4) {
-
-            strengthFill.style.width = "66%";
-            strengthText.textContent =
-                "Medium password";
-
-        } else {
-
-            strengthFill.style.width = "100%";
-            strengthText.textContent =
-                "Strong password";
+        if (formMessage) {
+            formMessage.textContent = "";
         }
     }
 
 
     /* =====================================================
-       PASSWORD VISIBILITY
+       CHECK SUPABASE LIBRARY
+    ===================================================== */
+
+    if (
+        !window.supabase ||
+        typeof window.supabase.createClient !== "function"
+    ) {
+
+        showMessage(
+            "Nexus could not load the authentication service. Please check your internet connection and refresh the page."
+        );
+
+        return;
+    }
+
+
+    /* =====================================================
+       CREATE SUPABASE CLIENT
+    ===================================================== */
+
+    const supabase =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    /* =====================================================
+       PASSWORD TOGGLE
     ===================================================== */
 
     function setupPasswordToggle(
@@ -212,8 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
             () => {
 
                 if (
-                    input.type ===
-                    "password"
+                    input.type === "password"
                 ) {
 
                     input.type = "text";
@@ -255,18 +203,87 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       LIVE PASSWORD STRENGTH
+       PASSWORD STRENGTH
     ===================================================== */
+
+    function updatePasswordStrength(value) {
+
+        if (!strengthFill || !strengthText) {
+            return;
+        }
+
+        if (!value) {
+
+            strengthFill.style.width =
+                "0%";
+
+            strengthText.textContent =
+                "Password strength";
+
+            return;
+        }
+
+        let score = 0;
+
+        if (value.length >= 8) {
+            score++;
+        }
+
+        if (/[A-Z]/.test(value)) {
+            score++;
+        }
+
+        if (/[a-z]/.test(value)) {
+            score++;
+        }
+
+        if (/[0-9]/.test(value)) {
+            score++;
+        }
+
+        if (/[^A-Za-z0-9]/.test(value)) {
+            score++;
+        }
+
+
+        if (score <= 2) {
+
+            strengthFill.style.width =
+                "33%";
+
+            strengthText.textContent =
+                "Weak password";
+
+        } else if (score <= 4) {
+
+            strengthFill.style.width =
+                "66%";
+
+            strengthText.textContent =
+                "Medium password";
+
+        } else {
+
+            strengthFill.style.width =
+                "100%";
+
+            strengthText.textContent =
+                "Strong password";
+        }
+    }
+
 
     password.addEventListener(
         "input",
         () => {
 
-            checkPasswordStrength(
+            updatePasswordStrength(
                 password.value
             );
 
-            passwordError.textContent = "";
+            passwordError.textContent =
+                "";
+
             password.classList.remove(
                 "input-error"
             );
@@ -275,7 +292,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       VALIDATION
+       CLEAR ERRORS
+    ===================================================== */
+
+    function clearErrors() {
+
+        fullNameError.textContent = "";
+        emailError.textContent = "";
+        passwordError.textContent = "";
+        confirmPasswordError.textContent = "";
+        termsError.textContent = "";
+
+        fullName.classList.remove(
+            "input-error"
+        );
+
+        email.classList.remove(
+            "input-error"
+        );
+
+        password.classList.remove(
+            "input-error"
+        );
+
+        confirmPassword.classList.remove(
+            "input-error"
+        );
+    }
+
+
+    /* =====================================================
+       EMAIL VALIDATION
+    ===================================================== */
+
+    function isValidEmail(value) {
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            .test(value);
+    }
+
+
+    /* =====================================================
+       FORM VALIDATION
     ===================================================== */
 
     function validateForm() {
@@ -283,6 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let valid = true;
 
         clearErrors();
+        clearMessage();
 
 
         /* FULL NAME */
@@ -317,7 +376,8 @@ document.addEventListener("DOMContentLoaded", () => {
         /* EMAIL */
 
         const emailValue =
-            email.value.trim();
+            email.value.trim()
+                .toLowerCase();
 
         if (!emailValue) {
 
@@ -347,10 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /* PASSWORD */
 
-        const passwordValue =
-            password.value;
-
-        if (!passwordValue) {
+        if (!password.value) {
 
             passwordError.textContent =
                 "Please create a password.";
@@ -362,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
             valid = false;
 
         } else if (
-            passwordValue.length < 8
+            password.value.length < 8
         ) {
 
             passwordError.textContent =
@@ -391,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } else if (
             confirmPassword.value !==
-            passwordValue
+            password.value
         ) {
 
             confirmPasswordError.textContent =
@@ -421,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
-       FORM SUBMISSION
+       REGISTRATION
     ===================================================== */
 
     registerForm.addEventListener(
@@ -438,72 +495,88 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            /* PREPARE */
-
             const name =
                 fullName.value.trim();
 
             const emailValue =
                 email.value.trim()
-                .toLowerCase();
+                    .toLowerCase();
 
             const passwordValue =
                 password.value;
 
 
-            /* DISABLE BUTTON */
+            /* BUTTON STATE */
 
-            submitButton.disabled = true;
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
 
-            submitText.textContent =
-                "Creating Account...";
+            if (submitText) {
+                submitText.textContent =
+                    "Creating Account...";
+            }
 
-            formMessage.textContent = "";
+            showMessage(
+                "Creating your Nexus account..."
+            );
 
 
             try {
 
                 /* =========================================
-                   CREATE SUPABASE AUTH ACCOUNT
+                   SUPABASE SIGN UP
                 ========================================= */
 
-                const {
-                    data,
-                    error
-                } = await supabase.auth.signUp({
+                const result =
+                    await supabase.auth.signUp({
 
-                    email: emailValue,
+                        email: emailValue,
 
-                    password: passwordValue,
+                        password: passwordValue,
 
-                    options: {
+                        options: {
 
-                        data: {
-                            full_name: name
-                        },
+                            data: {
+                                full_name: name
+                            }
+                        }
+                    });
 
-                        emailRedirectTo:
-                            window.location.origin +
-                            "/nexus-login.html"
-                    }
-                });
+
+                const data =
+                    result.data;
+
+                const error =
+                    result.error;
 
 
                 /* =========================================
-                   HANDLE ERROR
+                   SUPABASE ERROR
                 ========================================= */
 
                 if (error) {
 
                     console.error(
-                        "Supabase registration error:",
+                        "Nexus Supabase error:",
                         error
                     );
 
+                    const errorMessage =
+                        error.message ||
+                        "Registration failed.";
+
                     if (
-                        error.message
+                        errorMessage
                             .toLowerCase()
-                            .includes("already registered")
+                            .includes(
+                                "already registered"
+                            ) ||
+                        errorMessage
+                            .toLowerCase()
+                            .includes(
+                                "already exists"
+                            )
                     ) {
 
                         emailError.textContent =
@@ -513,10 +586,13 @@ document.addEventListener("DOMContentLoaded", () => {
                             "input-error"
                         );
 
+                        showMessage("");
+
                     } else {
 
-                        formMessage.textContent =
-                            error.message;
+                        showMessage(
+                            errorMessage
+                        );
                     }
 
                     return;
@@ -528,59 +604,84 @@ document.addEventListener("DOMContentLoaded", () => {
                 ========================================= */
 
                 console.log(
-                    "Nexus account created:",
+                    "Nexus registration successful:",
                     data
                 );
 
 
-                registerForm.reset();
+                if (
+                    data &&
+                    data.user
+                ) {
 
-                strengthFill.style.width =
-                    "0%";
+                    registerForm.reset();
 
-                strengthText.textContent =
-                    "Password strength";
+                    updatePasswordStrength(
+                        ""
+                    );
 
 
-                formMessage.textContent =
-                    "Account created successfully! Please check your email to confirm your account before logging in.";
+                    if (
+                        data.session
+                    ) {
+
+                        showMessage(
+                            "Your Nexus account has been created successfully. You can now log in."
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "Your Nexus account has been created. Please check your email and confirm your account before logging in."
+                        );
+                    }
+
+                } else {
+
+                    showMessage(
+                        "Registration completed. Please check your email for confirmation."
+                    );
+                }
 
 
             } catch (error) {
 
                 console.error(
-                    "Unexpected registration error:",
+                    "Nexus registration exception:",
                     error
                 );
 
-                formMessage.textContent =
-                    "Something went wrong. Please check your internet connection and try again.";
+                showMessage(
+                    "Unable to connect to Nexus authentication. Please check your internet connection and try again."
+                );
+
 
             } finally {
 
-                /* =========================================
-                   RE-ENABLE BUTTON
-                ========================================= */
+                if (submitButton) {
+                    submitButton.disabled =
+                        false;
+                }
 
-                submitButton.disabled =
-                    false;
-
-                submitText.textContent =
-                    "Create Account";
+                if (submitText) {
+                    submitText.textContent =
+                        "Create Account";
+                }
             }
         }
     );
 
 
     /* =====================================================
-       CLEAR FIELD ERRORS WHILE TYPING
+       LIVE ERROR CLEARING
     ===================================================== */
 
     fullName.addEventListener(
         "input",
         () => {
 
-            fullNameError.textContent = "";
+            fullNameError.textContent =
+                "";
 
             fullName.classList.remove(
                 "input-error"
@@ -593,7 +694,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "input",
         () => {
 
-            emailError.textContent = "";
+            emailError.textContent =
+                "";
 
             email.classList.remove(
                 "input-error"
@@ -620,30 +722,17 @@ document.addEventListener("DOMContentLoaded", () => {
         "change",
         () => {
 
-            termsError.textContent = "";
+            termsError.textContent =
+                "";
         }
     );
 
 });
 
-After replacing it
+Save the complete file as "nexus-register.js".
 
-Save "nexus-register.js".
+Then refresh the registration page and press Create Account once.
 
-You should now have:
+This version is specifically designed to show an error on the page if Supabase cannot load or the registration request fails, instead of silently doing nothing.
 
-nexus-register.html
-nexus-register.css
-nexus-register.js
-
-⚠️ One thing before testing
-
-We have not yet created the "profiles" table. That's intentional.
-
-The registration above uses Supabase Auth and stores the name temporarily in the user's Auth metadata. Once we confirm that registration works, we'll build the proper "profiles" table with Row Level Security and connect the user's profile to it.
-
-So don't start creating database tables yourself yet.
-
-After saving the JS file, open "nexus-register.html" and test with an email address you control. Do not use your Supabase account password unless you actually want to create Nexus with that email.
-
-Tell me exactly what happens when you press Create Account.
+If it works, you should see a message telling you that the account was created and that you need to confirm your email. Then we'll check Authentication → Users.
