@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,107 +16,309 @@
         rel="stylesheet"
         href="nexus-register.css"
     >
+
 </head>
+
 
 <body>
 
-    <main class="register-page">
 
-        <div class="register-container">
+    <main class="auth-page">
+
+
+        <!-- =================================================
+             LEFT INTRODUCTION
+        ================================================== -->
+
+        <section class="auth-intro">
+
 
             <!-- BRAND -->
-            <div class="register-brand">
 
-                <a
-                    href="nexus.html"
-                    class="brand-logo"
-                >
-                    Nexus
-                </a>
+            <a
+                href="nexus.html"
+                class="brand"
+            >
+
+                <span class="brand-icon">
+                    N
+                </span>
+
+                Nexus
+
+            </a>
+
+
+            <!-- INTRO CONTENT -->
+
+            <div class="intro-content">
+
+
+                <span class="intro-badge">
+                    THE NEXT GENERATION LEARNING PLATFORM
+                </span>
+
+
+                <h1>
+
+                    Learn.
+                    <span>
+                        Build.
+                    </span>
+                    Grow.
+
+                </h1>
+
 
                 <p>
-                    Learn. Build. Grow.
+
+                    Create your Nexus account and begin a
+                    structured learning journey built for
+                    students, developers and lifelong learners.
+
                 </p>
+
+
+                <!-- INTRO POINTS -->
+
+                <div class="intro-points">
+
+
+                    <div class="intro-point">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Learn with structure
+                            </strong>
+
+                            <small>
+                                Follow organized courses and lessons
+                                designed to help you learn step by step.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="intro-point">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Practice your skills
+                            </strong>
+
+                            <small>
+                                Test your knowledge with interactive
+                                quizzes and practical learning.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="intro-point">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Track your progress
+                            </strong>
+
+                            <small>
+                                Build your learning history and see
+                                how far you have progressed.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
 
             </div>
 
 
-            <!-- REGISTER CARD -->
-            <div class="register-card">
+            <!-- INTRO FOOTER -->
 
-                <div class="register-header">
+            <div class="intro-footer">
 
-                    <h1>
+                Nexus · Learn. Build. Grow.
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             FORM SECTION
+        ================================================== -->
+
+        <section class="auth-form-section">
+
+
+            <div class="auth-card">
+
+
+                <!-- MOBILE BRAND -->
+
+                <div class="mobile-brand">
+
+                    <a
+                        href="nexus.html"
+                        class="brand"
+                    >
+
+                        <span class="brand-icon">
+                            N
+                        </span>
+
+                        Nexus
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- FORM HEADER -->
+
+                <div class="form-header">
+
+                    <span class="form-label">
+                        GET STARTED
+                    </span>
+
+                    <h2>
                         Create your account
-                    </h1>
+                    </h2>
 
                     <p>
-                        Start your learning journey with Nexus.
+                        Join Nexus and start building your
+                        learning journey today.
                     </p>
 
                 </div>
 
 
-                <!-- FORM -->
+
+                <!-- =================================================
+                     REGISTRATION FORM
+                ================================================== -->
+
                 <form
                     id="registerForm"
+                    class="register-form"
                     novalidate
                 >
 
+
                     <!-- FULL NAME -->
+
                     <div class="form-group">
 
                         <label for="fullName">
                             Full Name
                         </label>
 
-                        <input
-                            type="text"
-                            id="fullName"
-                            name="fullName"
-                            placeholder="Enter your full name"
-                            autocomplete="name"
-                        >
 
-                        <small
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                            >
+
+                        </div>
+
+
+                        <div
                             id="fullNameError"
-                            class="form-error"
-                        ></small>
+                            class="error-message"
+                        ></div>
 
                     </div>
 
 
+
                     <!-- EMAIL -->
+
                     <div class="form-group">
 
                         <label for="email">
                             Email Address
                         </label>
 
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter your email"
-                            autocomplete="email"
-                        >
 
-                        <small
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ✉
+                            </span>
+
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email address"
+                                autocomplete="email"
+                            >
+
+                        </div>
+
+
+                        <div
                             id="emailError"
-                            class="form-error"
-                        ></small>
+                            class="error-message"
+                        ></div>
 
                     </div>
 
 
+
                     <!-- PASSWORD -->
+
                     <div class="form-group">
 
                         <label for="password">
                             Password
                         </label>
 
-                        <div class="password-wrapper">
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
 
                             <input
                                 type="password"
@@ -125,49 +328,63 @@
                                 autocomplete="new-password"
                             >
 
+
                             <button
                                 type="button"
                                 id="passwordToggle"
                                 class="password-toggle"
+                                aria-label="Show password"
                             >
                                 Show
                             </button>
 
                         </div>
 
+
+                        <!-- PASSWORD STRENGTH -->
+
                         <div class="password-strength">
 
                             <div class="strength-bar">
 
-                                <div
+                                <span
                                     id="strengthFill"
-                                    class="strength-fill"
-                                ></div>
+                                ></span>
 
                             </div>
 
-                            <small id="strengthText">
+
+                            <span id="strengthText">
                                 Password strength
-                            </small>
+                            </span>
 
                         </div>
 
-                        <small
+
+                        <div
                             id="passwordError"
-                            class="form-error"
-                        ></small>
+                            class="error-message"
+                        ></div>
 
                     </div>
 
 
+
                     <!-- CONFIRM PASSWORD -->
+
                     <div class="form-group">
 
                         <label for="confirmPassword">
                             Confirm Password
                         </label>
 
-                        <div class="password-wrapper">
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                🔒
+                            </span>
+
 
                             <input
                                 type="password"
@@ -177,28 +394,35 @@
                                 autocomplete="new-password"
                             >
 
+
                             <button
                                 type="button"
                                 id="confirmPasswordToggle"
                                 class="password-toggle"
+                                aria-label="Show password"
                             >
                                 Show
                             </button>
 
                         </div>
 
-                        <small
+
+                        <div
                             id="confirmPasswordError"
-                            class="form-error"
-                        ></small>
+                            class="error-message"
+                        ></div>
 
                     </div>
 
 
+
                     <!-- TERMS -->
+
                     <div class="terms-group">
 
-                        <label class="terms-label">
+
+                        <label class="checkbox-label">
+
 
                             <input
                                 type="checkbox"
@@ -206,594 +430,422 @@
                                 name="terms"
                             >
 
-                            <span>
+
+                            <span class="custom-checkbox"></span>
+
+
+                            <span class="terms-text">
+
                                 I agree to the
+
                                 <a href="#">
                                     Terms of Service
                                 </a>
+
                                 and
+
                                 <a href="#">
                                     Privacy Policy
                                 </a>.
+
                             </span>
+
 
                         </label>
 
-                        <small
+
+                        <div
                             id="termsError"
-                            class="form-error"
-                        ></small>
+                            class="error-message"
+                        ></div>
+
 
                     </div>
 
 
+
                     <!-- MESSAGE -->
+
                     <div
                         id="formMessage"
                         class="form-message"
                         role="alert"
+                        aria-live="polite"
                     ></div>
 
 
-                    <!-- BUTTON -->
+
+                    <!-- CREATE ACCOUNT -->
+
                     <button
                         type="submit"
                         class="create-account-btn"
                     >
+
                         <span>
                             Create Account
                         </span>
+
+                        <span class="arrow">
+                            →
+                        </span>
+
                     </button>
+
 
                 </form>
 
 
+
                 <!-- LOGIN -->
+
                 <div class="login-link">
 
-                    <p>
-                        Already have an account?
+                    Already have an account?
 
-                        <a href="nexus-login.html">
-                            Log in
-                        </a>
-
-                    </p>
+                    <a href="nexus-login.html">
+                        Log in
+                    </a>
 
                 </div>
 
-            </div>
 
 
-            <!-- BACK -->
-            <div class="back-link">
+                <!-- BACK -->
 
-                <a href="nexus.html">
+                <a
+                    href="nexus.html"
+                    class="back-link"
+                >
                     ← Back to Nexus
                 </a>
 
-            </div>
-
-
-            <!-- FOOTER -->
-            <div class="register-footer">
-
-                <p>
-                    ©
-                    <span id="year"></span>
-                    Nexus.
-                    All rights reserved.
-                </p>
 
             </div>
 
-        </div>
+
+        </section>
+
 
     </main>
 
 
-    <!-- =====================================================
+
+    <!-- =================================================
          SUPABASE
-    ====================================================== -->
+    ================================================== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
 
-    <!-- =====================================================
-         NEXUS REGISTRATION
-    ====================================================== -->
+
+    <!-- =================================================
+         NEXUS REGISTRATION LOGIC
+    ================================================== -->
 
     <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-
-        console.log("NEXUS: page loaded");
-
-
-        /* =================================================
-           ELEMENTS
-        ================================================= */
-
-        const form =
-            document.getElementById("registerForm");
-
-        const nameInput =
-            document.getElementById("fullName");
-
-        const emailInput =
-            document.getElementById("email");
-
-        const passwordInput =
-            document.getElementById("password");
-
-        const confirmInput =
-            document.getElementById("confirmPassword");
-
-        const terms =
-            document.getElementById("terms");
-
-        const message =
-            document.getElementById("formMessage");
-
-        const button =
-            document.querySelector(
-                ".create-account-btn"
-            );
-
-        const buttonText =
-            button.querySelector("span");
-
-        const year =
-            document.getElementById("year");
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
 
 
-        /* =================================================
-           YEAR
-        ================================================= */
+            /* =================================================
+               ELEMENTS
+            ================================================= */
 
-        year.textContent =
-            new Date().getFullYear();
+            const form =
+                document.getElementById(
+                    "registerForm"
+                );
+
+            const fullNameInput =
+                document.getElementById(
+                    "fullName"
+                );
+
+            const emailInput =
+                document.getElementById(
+                    "email"
+                );
+
+            const passwordInput =
+                document.getElementById(
+                    "password"
+                );
+
+            const confirmPasswordInput =
+                document.getElementById(
+                    "confirmPassword"
+                );
+
+            const terms =
+                document.getElementById(
+                    "terms"
+                );
+
+            const formMessage =
+                document.getElementById(
+                    "formMessage"
+                );
+
+            const submitButton =
+                document.querySelector(
+                    ".create-account-btn"
+                );
+
+            const submitText =
+                submitButton.querySelector(
+                    "span"
+                );
+
+            const strengthFill =
+                document.getElementById(
+                    "strengthFill"
+                );
+
+            const strengthText =
+                document.getElementById(
+                    "strengthText"
+                );
 
 
-        /* =================================================
-           MESSAGE
-        ================================================= */
+            /* =================================================
+               ERROR ELEMENTS
+            ================================================== */
 
-        function showMessage(text) {
+            const fullNameError =
+                document.getElementById(
+                    "fullNameError"
+                );
 
-            message.textContent =
-                text;
+            const emailError =
+                document.getElementById(
+                    "emailError"
+                );
 
-            console.log(
-                "NEXUS MESSAGE:",
+            const passwordError =
+                document.getElementById(
+                    "passwordError"
+                );
+
+            const confirmPasswordError =
+                document.getElementById(
+                    "confirmPasswordError"
+                );
+
+            const termsError =
+                document.getElementById(
+                    "termsError"
+                );
+
+
+            /* =================================================
+               SUPABASE
+            ================================================== */
+
+            const SUPABASE_URL =
+                "https://rjtzurluhylqvfbwajwv.supabase.co";
+
+            const SUPABASE_KEY =
+                "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
+
+
+            if (
+                !window.supabase ||
+                typeof window.supabase.createClient !==
+                "function"
+            ) {
+
+                formMessage.textContent =
+                    "Authentication service could not load.";
+
+                return;
+            }
+
+
+            const supabase =
+                window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_KEY
+                );
+
+
+
+            /* =================================================
+               MESSAGE
+            ================================================== */
+
+            function showMessage(
                 text
-            );
-        }
+            ) {
 
-
-        /* =================================================
-           CHECK SUPABASE
-        ================================================= */
-
-        if (!window.supabase) {
-
-            showMessage(
-                "ERROR: Supabase library did not load."
-            );
-
-            return;
-        }
-
-
-        console.log(
-            "NEXUS: Supabase library loaded"
-        );
-
-
-        /* =================================================
-           SUPABASE CONFIG
-        ================================================= */
-
-        const SUPABASE_URL =
-            "https://rjtzurluhylqvfbwajwv.supabase.co";
-
-        const SUPABASE_KEY =
-            "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
-
-
-        /* =================================================
-           CREATE CLIENT
-        ================================================= */
-
-        const client =
-            window.supabase.createClient(
-                SUPABASE_URL,
-                SUPABASE_KEY
-            );
-
-
-        console.log(
-            "NEXUS: Supabase client created"
-        );
-
-
-        /* =================================================
-           PASSWORD SHOW/HIDE
-        ================================================= */
-
-        document
-            .getElementById("passwordToggle")
-            .addEventListener(
-                "click",
-                function () {
-
-                    if (
-                        passwordInput.type ===
-                        "password"
-                    ) {
-
-                        passwordInput.type =
-                            "text";
-
-                        this.textContent =
-                            "Hide";
-
-                    } else {
-
-                        passwordInput.type =
-                            "password";
-
-                        this.textContent =
-                            "Show";
-                    }
-                }
-            );
-
-
-        document
-            .getElementById("confirmPasswordToggle")
-            .addEventListener(
-                "click",
-                function () {
-
-                    if (
-                        confirmInput.type ===
-                        "password"
-                    ) {
-
-                        confirmInput.type =
-                            "text";
-
-                        this.textContent =
-                            "Hide";
-
-                    } else {
-
-                        confirmInput.type =
-                            "password";
-
-                        this.textContent =
-                            "Show";
-                    }
-                }
-            );
-
-
-        /* =================================================
-           PASSWORD STRENGTH
-        ================================================= */
-
-        const strengthFill =
-            document.getElementById(
-                "strengthFill"
-            );
-
-        const strengthText =
-            document.getElementById(
-                "strengthText"
-            );
-
-
-        passwordInput.addEventListener(
-            "input",
-            function () {
-
-                const value =
-                    this.value;
-
-                let score = 0;
-
-                if (value.length >= 8)
-                    score++;
-
-                if (/[A-Z]/.test(value))
-                    score++;
-
-                if (/[a-z]/.test(value))
-                    score++;
-
-                if (/[0-9]/.test(value))
-                    score++;
-
-                if (/[^A-Za-z0-9]/.test(value))
-                    score++;
-
-
-                if (!value) {
-
-                    strengthFill.style.width =
-                        "0%";
-
-                    strengthText.textContent =
-                        "Password strength";
-
-                } else if (score <= 2) {
-
-                    strengthFill.style.width =
-                        "33%";
-
-                    strengthText.textContent =
-                        "Weak password";
-
-                } else if (score <= 4) {
-
-                    strengthFill.style.width =
-                        "66%";
-
-                    strengthText.textContent =
-                        "Medium password";
-
-                } else {
-
-                    strengthFill.style.width =
-                        "100%";
-
-                    strengthText.textContent =
-                        "Strong password";
-                }
+                formMessage.textContent =
+                    text;
 
             }
-        );
 
 
-        /* =================================================
-           REGISTRATION
-        ================================================= */
 
-        form.addEventListener(
-            "submit",
-            async function (event) {
+            /* =================================================
+               PASSWORD TOGGLE
+            ================================================== */
 
-                event.preventDefault();
+            function setupPasswordToggle(
+                input,
+                button
+            ) {
 
-                console.log(
-                    "NEXUS: submit clicked"
-                );
-
-
-                /* -----------------------------------------
-                   VALUES
-                ----------------------------------------- */
-
-                const fullName =
-                    nameInput.value.trim();
-
-                const email =
-                    emailInput.value
-                        .trim()
-                        .toLowerCase();
-
-                const password =
-                    passwordInput.value;
-
-                const confirmPassword =
-                    confirmInput.value;
-
-
-                /* -----------------------------------------
-                   VALIDATION
-                ----------------------------------------- */
-
-                if (!fullName) {
-
-                    showMessage(
-                        "Please enter your full name."
-                    );
-
-                    return;
-                }
-
-
-                if (!email) {
-
-                    showMessage(
-                        "Please enter your email."
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                        .test(email)
-                ) {
-
-                    showMessage(
-                        "Please enter a valid email address."
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    password.length < 8
-                ) {
-
-                    showMessage(
-                        "Password must be at least 8 characters."
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    password !==
-                    confirmPassword
-                ) {
-
-                    showMessage(
-                        "Passwords do not match."
-                    );
-
-                    return;
-                }
-
-
-                if (!terms.checked) {
-
-                    showMessage(
-                        "Please accept the Terms of Service and Privacy Policy."
-                    );
-
-                    return;
-                }
-
-
-                /* -----------------------------------------
-                   START
-                ----------------------------------------- */
-
-                button.disabled =
-                    true;
-
-                buttonText.textContent =
-                    "Creating Account...";
-
-                showMessage(
-                    "Connecting to Nexus..."
-                );
-
-
-                try {
-
-                    console.log(
-                        "NEXUS: sending signUp request"
-                    );
-
-
-                    const response =
-                        await client.auth.signUp({
-
-                            email:
-                                email,
-
-                            password:
-                                password,
-
-                            options: {
-
-                                data: {
-                                    full_name:
-                                        fullName
-                                }
-
-                            }
-
-                        });
-
-
-                    console.log(
-                        "NEXUS: Supabase response",
-                        response
-                    );
-
-
-                    /* -------------------------------------
-                       ERROR
-                    ------------------------------------- */
-
-                    if (response.error) {
-
-                        showMessage(
-                            "Supabase error: " +
-                            response.error.message
-                        );
-
-                        return;
-                    }
-
-
-                    /* -------------------------------------
-                       SUCCESS
-                    ------------------------------------- */
-
-                    if (
-                        response.data &&
-                        response.data.user
-                    ) {
+                button.addEventListener(
+                    "click",
+                    function () {
 
                         if (
-                            response.data.session
+                            input.type ===
+                            "password"
                         ) {
 
-                            showMessage(
-                                "Account created successfully. You can now log in."
-                            );
+                            input.type =
+                                "text";
+
+                            button.textContent =
+                                "Hide";
 
                         } else {
 
-                            showMessage(
-                                "Account created! Please check your email and confirm your account before logging in."
-                            );
+                            input.type =
+                                "password";
+
+                            button.textContent =
+                                "Show";
+
                         }
 
-                        form.reset();
+                    }
+                );
 
-                    } else {
+            }
 
-                        showMessage(
-                            "No user was returned by Supabase."
-                        );
+
+            setupPasswordToggle(
+                passwordInput,
+                document.getElementById(
+                    "passwordToggle"
+                )
+            );
+
+
+            setupPasswordToggle(
+                confirmPasswordInput,
+                document.getElementById(
+                    "confirmPasswordToggle"
+                )
+            );
+
+
+
+            /* =================================================
+               PASSWORD STRENGTH
+            ================================================== */
+
+            passwordInput.addEventListener(
+                "input",
+                function () {
+
+                    const value =
+                        passwordInput.value;
+
+                    let score = 0;
+
+
+                    if (
+                        value.length >= 8
+                    ) {
+                        score++;
                     }
 
 
-                } catch (error) {
-
-                    console.error(
-                        "NEXUS ERROR:",
-                        error
-                    );
-
-                    showMessage(
-                        "Connection error: " +
-                        error.message
-                    );
+                    if (
+                        /[A-Z]/.test(value)
+                    ) {
+                        score++;
+                    }
 
 
-                } finally {
+                    if (
+                        /[a-z]/.test(value)
+                    ) {
+                        score++;
+                    }
 
-                    button.disabled =
-                        false;
 
-                    buttonText.textContent =
-                        "Create Account";
+                    if (
+                        /[0-9]/.test(value)
+                    ) {
+                        score++;
+                    }
+
+
+                    if (
+                        /[^A-Za-z0-9]/.test(value)
+                    ) {
+                        score++;
+                    }
+
+
+                    if (!value) {
+
+                        strengthFill.style.width =
+                            "0%";
+
+                        strengthText.textContent =
+                            "Password strength";
+
+                    } else if (
+                        score <= 2
+                    ) {
+
+                        strengthFill.style.width =
+                            "33%";
+
+                        strengthText.textContent =
+                            "Weak password";
+
+                    } else if (
+                        score <= 4
+                    ) {
+
+                        strengthFill.style.width =
+                            "66%";
+
+                        strengthText.textContent =
+                            "Medium password";
+
+                    } else {
+
+                        strengthFill.style.width =
+                            "100%";
+
+                        strengthText.textContent =
+                            "Strong password";
+
+                    }
+
                 }
-
-            }
-        );
+            );
 
 
-        console.log(
-            "NEXUS: registration system ready"
-        );
 
-    });
+            /* =================================================
+               CLEAR ERRORS
+            ================================================== */
 
-    </script>
+            function clearErrors() {
 
-</body>
+                fullNameError.textContent =
+                    "";
 
-</html>
+                emailError.textContent =
+ 
