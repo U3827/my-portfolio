@@ -1,181 +1,378 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const form =
-        document.getElementById("loginForm");
+/* =========================================
+   SUPABASE
+========================================= */
 
-    const email =
-        document.getElementById("email");
+const SUPABASE_URL =
+    "https://rjtzurluhylqvfbwajwv.supabase.co";
 
-    const password =
-        document.getElementById("password");
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
 
-    const passwordToggle =
-        document.getElementById("passwordToggle");
-
-    const formMessage =
-        document.getElementById("formMessage");
-
-    const forgotPassword =
-        document.getElementById("forgotPassword");
-
-    const year =
-        document.getElementById("year");
+const supabase =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-    /* ================================
-       YEAR
-    ================================= */
+/* =========================================
+   ELEMENTS
+========================================= */
 
-    if (year) {
-        year.textContent =
-            new Date().getFullYear();
+const loginForm =
+    document.getElementById("loginForm");
+
+const email =
+    document.getElementById("email");
+
+const password =
+    document.getElementById("password");
+
+const passwordToggle =
+    document.getElementById("passwordToggle");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginButtonText =
+    document.getElementById("loginButtonText");
+
+const formMessage =
+    document.getElementById("formMessage");
+
+const emailError =
+    document.getElementById("emailError");
+
+const passwordError =
+    document.getElementById("passwordError");
+
+const forgotPassword =
+    document.getElementById("forgotPassword");
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(message, type) {
+
+    formMessage.textContent =
+        message;
+
+    if (type === "success") {
+
+        formMessage.style.color =
+            "#42d392";
+
+    } else if (type === "error") {
+
+        formMessage.style.color =
+            "#ff6b81";
+
+    } else {
+
+        formMessage.style.color =
+            "#8e9aaf";
     }
 
+}
 
-    /* ================================
-       PASSWORD VISIBILITY
-    ================================= */
 
-    passwordToggle.addEventListener(
-        "click",
-        () => {
+/* =========================================
+   CLEAR ERRORS
+========================================= */
 
-            if (password.type === "password") {
+function clearErrors() {
 
-                password.type = "text";
+    emailError.textContent = "";
+    passwordError.textContent = "";
+    formMessage.textContent = "";
 
-                passwordToggle.textContent =
-                    "Hide";
+    email
+        .closest(".input-wrapper")
+        ?.classList.remove(
+            "has-error",
+            "has-success"
+        );
 
-            } else {
+    password
+        .closest(".input-wrapper")
+        ?.classList.remove(
+            "has-error",
+            "has-success"
+        );
 
-                password.type = "password";
+}
 
-                passwordToggle.textContent =
-                    "Show";
+
+/* =========================================
+   PASSWORD VISIBILITY
+========================================= */
+
+passwordToggle.addEventListener(
+    "click",
+    () => {
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            passwordToggle.textContent =
+                "Hide";
+
+        } else {
+
+            password.type = "password";
+
+            passwordToggle.textContent =
+                "Show";
+        }
+
+    }
+);
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+        clearErrors();
+
+
+        const emailValue =
+            email.value.trim();
+
+        const passwordValue =
+            password.value;
+
+
+        /* VALIDATION */
+
+        let valid = true;
+
+
+        if (!emailValue) {
+
+            emailError.textContent =
+                "Please enter your email address.";
+
+            email
+                .closest(".input-wrapper")
+                ?.classList.add("has-error");
+
+            valid = false;
+
+        } else if (
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(emailValue)
+        ) {
+
+            emailError.textContent =
+                "Please enter a valid email address.";
+
+            email
+                .closest(".input-wrapper")
+                ?.classList.add("has-error");
+
+            valid = false;
+        }
+
+
+        if (!passwordValue) {
+
+            passwordError.textContent =
+                "Please enter your password.";
+
+            password
+                .closest(".input-wrapper")
+                ?.classList.add("has-error");
+
+            valid = false;
+        }
+
+
+        if (!valid) {
+            return;
+        }
+
+
+        /* LOADING */
+
+        loginButton.disabled =
+            true;
+
+        loginButton.style.opacity =
+            "0.7";
+
+        loginButtonText.textContent =
+            "Logging in...";
+
+
+        try {
+
+            const {
+                data,
+                error
+            } = await supabase.auth.signInWithPassword({
+
+                email: emailValue,
+
+                password: passwordValue
+
+            });
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            if (!data || !data.user) {
+
+                throw new Error(
+                    "Login could not be completed. Please try again."
+                );
 
             }
 
-        }
-    );
+
+            console.log(
+                "Nexus login successful:",
+                data.user
+            );
 
 
-    /* ================================
-       LOGIN VALIDATION
-    ================================= */
-
-    form.addEventListener(
-        "submit",
-        event => {
-
-            event.preventDefault();
-
-            let valid = true;
-
-            const emailError =
-                document.getElementById(
-                    "emailError"
-                );
-
-            const passwordError =
-                document.getElementById(
-                    "passwordError"
-                );
+            showMessage(
+                "Login successful. Welcome back!",
+                "success"
+            );
 
 
-            emailError.textContent = "";
-            passwordError.textContent = "";
-            formMessage.textContent = "";
+            /*
+             * Dashboard will be created next.
+             *
+             * For now we do not redirect
+             * because the dashboard does
+             * not exist yet.
+             */
+
+        } catch (error) {
+
+            console.error(
+                "Nexus login error:",
+                error
+            );
 
 
-            /* EMAIL */
+            let message =
+                "Unable to log in. Please try again.";
 
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (
-                !emailPattern.test(
-                    email.value.trim()
-                )
+                error.message
+                    ?.toLowerCase()
+                    .includes("invalid login credentials")
             ) {
 
-                emailError.textContent =
-                    "Please enter a valid email address.";
+                message =
+                    "Incorrect email or password.";
 
-                email
-                    .closest(".input-wrapper")
-                    .classList.add("has-error");
+            } else if (
+                error.message
+                    ?.toLowerCase()
+                    .includes("email not confirmed")
+            ) {
 
-                valid = false;
+                message =
+                    "Please confirm your email before logging in.";
 
-            } else {
+            } else if (
+                error.message
+            ) {
 
-                email
-                    .closest(".input-wrapper")
-                    .classList.remove(
-                        "has-error"
-                    );
-
+                message =
+                    error.message;
             }
 
 
-            /* PASSWORD */
+            showMessage(
+                message,
+                "error"
+            );
 
-            if (password.value.length === 0) {
+        } finally {
 
-                passwordError.textContent =
-                    "Please enter your password.";
+            loginButton.disabled =
+                false;
 
-                password
-                    .closest(".input-wrapper")
-                    .classList.add("has-error");
+            loginButton.style.opacity =
+                "1";
 
-                valid = false;
-
-            } else {
-
-                password
-                    .closest(".input-wrapper")
-                    .classList.remove(
-                        "has-error"
-                    );
-
-            }
-
-
-            /* FRONTEND DEMO MESSAGE */
-
-            if (valid) {
-
-                formMessage.style.color =
-                    "#8b85ff";
-
-                formMessage.textContent =
-                    "Login details are valid. Authentication will be connected to PHP + MySQL next.";
-
-            }
-
+            loginButtonText.textContent =
+                "Log In";
         }
-    );
+
+    }
+);
 
 
-    /* ================================
-       FORGOT PASSWORD
-    ================================= */
+/* =========================================
+   FORGOT PASSWORD
+========================================= */
 
-    forgotPassword.addEventListener(
-        "click",
-        event => {
+forgotPassword.addEventListener(
+    "click",
+    event => {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            formMessage.style.color =
-                "#8b85ff";
+        showMessage(
+            "Password recovery will be added next.",
+            "info"
+        );
 
-            formMessage.textContent =
-                "Password recovery will be added with the authentication system.";
+    }
+);
 
-        }
-    );
+
+/* =========================================
+   CHECK EXISTING SESSION
+========================================= */
+
+async function checkSession() {
+
+    const {
+        data
+    } = await supabase.auth.getSession();
+
+
+    if (
+        data &&
+        data.session
+    ) {
+
+        console.log(
+            "Existing Nexus session found."
+        );
+
+        /*
+         * We will redirect authenticated
+         * users to the Dashboard once
+         * the Dashboard is ready.
+         */
+    }
+
+}
+
+
+checkSession();
 
 });
