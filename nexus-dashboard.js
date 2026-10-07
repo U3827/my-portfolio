@@ -1,1099 +1,499 @@
 /* =========================================================
    NEXUS DASHBOARD
-   VERSION: 2026-10-02 FIXED
-========================================================= */
+   BUTTON CONTROL + LOGOUT SYSTEM
+   ========================================================= */
 
-console.log("NEXUS DASHBOARD JS v20261002 LOADED");
-
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL =
-    "https://rjtzurluhylqvfbwajwv.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_gYy7X9szI2XlzIwasv1_XA_qg5gJnsK";
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
-
-/* =========================================================
-   DOM ELEMENTS
-========================================================= */
-
-const sidebar =
-    document.getElementById("sidebar");
-
-const sidebarOverlay =
-    document.getElementById("sidebarOverlay");
-
-const menuToggle =
-    document.getElementById("menuToggle");
-
-const closeSidebar =
-    document.getElementById("closeSidebar");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-const notificationBtn =
-    document.getElementById("notificationBtn");
-
-const notificationCount =
-    document.getElementById("notificationCount");
-
-const headerUserName =
-    document.getElementById("headerUserName");
-
-const headerUserRole =
-    document.getElementById("headerUserRole");
-
-const userAvatar =
-    document.getElementById("userAvatar");
-
-const welcomeTitle =
-    document.getElementById("welcomeTitle");
-
-const enrolledCourses =
-    document.getElementById("enrolledCourses");
-
-const averageProgress =
-    document.getElementById("averageProgress");
-
-const completedCourses =
-    document.getElementById("completedCourses");
-
-const quizAttempts =
-    document.getElementById("quizAttempts");
-
-const progressCourses =
-    document.getElementById("progressCourses");
-
-const completedLessons =
-    document.getElementById("completedLessons");
-
-const progressQuizzes =
-    document.getElementById("progressQuizzes");
-
-const overallProgress =
-    document.getElementById("overallProgress");
-
-const continueLearning =
-    document.getElementById("continueLearning");
-
-const recentActivity =
-    document.getElementById("recentActivity");
-
-const bookmarksList =
-    document.getElementById("bookmarksList");
-
-const currentYear =
-    document.getElementById("currentYear");
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let currentUser = null;
-let currentProfile = null;
-
-let userEnrollments = [];
-let userLessonProgress = [];
-let userQuizAttempts = [];
-let userBookmarks = [];
-let userNotifications = [];
-
-
-/* =========================================================
-   START DASHBOARD
-========================================================= */
+"use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("Nexus dashboard DOM ready.");
+    /* =====================================================
+       CONFIGURATION
+       ===================================================== */
 
-    if (currentYear) {
-        currentYear.textContent =
-            new Date().getFullYear();
+    const LOGIN_PAGE = "nexus.html";
+
+    let toastTimer = null;
+
+
+    /* =====================================================
+       CREATE TOAST CONTAINER
+       ===================================================== */
+
+    function createToastContainer() {
+
+        let container =
+            document.getElementById("nexusToastContainer");
+
+        if (container) {
+            return container;
+        }
+
+        container = document.createElement("div");
+
+        container.id = "nexusToastContainer";
+
+        container.style.position = "fixed";
+        container.style.left = "50%";
+        container.style.bottom = "30px";
+        container.style.transform = "translateX(-50%)";
+        container.style.zIndex = "999999";
+        container.style.pointerEvents = "none";
+
+        document.body.appendChild(container);
+
+        return container;
     }
 
-    setupMobileSidebar();
-    setupNavigation();
-    setupQuickActions();
-    setupNotifications();
-    setupMarquee();
-    setupLogout();
 
-    loadDashboard();
-});
+    /* =====================================================
+       SHOW COMING SOON MESSAGE
+       ===================================================== */
 
+    function showComingSoon(message = "This feature is coming soon.") {
 
-/* =========================================================
-   MOBILE SIDEBAR
-========================================================= */
+        const container = createToastContainer();
 
-function setupMobileSidebar() {
+        if (toastTimer) {
+            clearTimeout(toastTimer);
+        }
 
-    if (menuToggle) {
+        container.innerHTML = "";
 
-        menuToggle.addEventListener("click", () => {
+        const toast = document.createElement("div");
 
-            sidebar?.classList.add("open");
+        toast.style.minWidth = "280px";
+        toast.style.maxWidth = "90vw";
+        toast.style.padding = "16px 20px";
+        toast.style.borderRadius = "14px";
+        toast.style.background = "#111827";
+        toast.style.color = "#ffffff";
+        toast.style.boxShadow =
+            "0 15px 40px rgba(0,0,0,0.25)";
+        toast.style.fontFamily =
+            "system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+        toast.style.textAlign = "center";
+        toast.style.fontSize = "14px";
+        toast.style.fontWeight = "600";
+        toast.style.lineHeight = "1.5";
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(15px)";
+        toast.style.transition =
+            "opacity 0.25s ease, transform 0.25s ease";
 
-            sidebarOverlay?.classList.add("open");
+        toast.innerHTML = `
+            <div
+                style="
+                    font-size:24px;
+                    margin-bottom:6px;
+                "
+            >
+                🚧
+            </div>
 
-            sidebarOverlay?.setAttribute(
-                "aria-hidden",
-                "false"
-            );
+            <div
+                style="
+                    font-size:15px;
+                    margin-bottom:4px;
+                "
+            >
+                Coming Soon
+            </div>
+
+            <div
+                style="
+                    color:#cbd5e1;
+                    font-size:12px;
+                    font-weight:400;
+                "
+            >
+                ${message}
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+
+            toast.style.opacity = "1";
+            toast.style.transform = "translateY(0)";
 
         });
 
-    }
+        toastTimer = setTimeout(() => {
 
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(15px)";
 
-    if (closeSidebar) {
+            setTimeout(() => {
 
-        closeSidebar.addEventListener("click", () => {
-
-            closeMobileSidebar();
-
-        });
-
-    }
-
-
-    if (sidebarOverlay) {
-
-        sidebarOverlay.addEventListener("click", () => {
-
-            closeMobileSidebar();
-
-        });
-
-    }
-
-}
-
-
-function closeMobileSidebar() {
-
-    sidebar?.classList.remove("open");
-
-    sidebarOverlay?.classList.remove("open");
-
-    sidebarOverlay?.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-}
-
-
-/* =========================================================
-   SIDEBAR NAVIGATION
-========================================================= */
-
-function setupNavigation() {
-
-    const navLinks =
-        document.querySelectorAll(
-            ".sidebar-nav .nav-item"
-        );
-
-
-    navLinks.forEach((link) => {
-
-        link.addEventListener("click", (event) => {
-
-            event.preventDefault();
-
-            navLinks.forEach((item) => {
-
-                item.classList.remove("active");
-
-            });
-
-            link.classList.add("active");
-
-            closeMobileSidebar();
-
-
-            const id = link.id;
-
-
-            if (id === "coursesLink") {
-
-                showToast(
-                    "My Courses will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "exploreCoursesLink") {
-
-                showToast(
-                    "Course Explorer will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "quizzesLink") {
-
-                showToast(
-                    "Quizzes & Exams will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "bookmarksLink") {
-
-                showToast(
-                    "Your bookmarks will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "historyLink") {
-
-                showToast(
-                    "Your learning history will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "settingsLink") {
-
-                showToast(
-                    "Settings will open here.",
-                    "info"
-                );
-
-            }
-
-            else if (id === "helpLink") {
-
-                showToast(
-                    "Help & Support will open here.",
-                    "info"
-                );
-
-            }
-
-        });
-
-    });
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-function setupLogout() {
-
-    if (!logoutBtn) {
-        return;
-    }
-
-
-    logoutBtn.addEventListener(
-        "click",
-        async () => {
-
-            logoutBtn.disabled = true;
-
-            const originalText =
-                logoutBtn.innerHTML;
-
-            logoutBtn.innerHTML =
-                "<span>↪</span><span>Logging out...</span>";
-
-
-            try {
-
-                const { error } =
-                    await supabaseClient.auth.signOut();
-
-
-                if (error) {
-
-                    throw error;
-
+                if (container) {
+                    container.innerHTML = "";
                 }
 
+            }, 250);
 
-                showToast(
-                    "You have been logged out.",
-                    "success"
-                );
-
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "nexus-login.html";
-
-                }, 500);
-
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Nexus logout error:",
-                    error
-                );
-
-
-                showToast(
-                    "Logout failed. Please try again.",
-                    "error"
-                );
-
-
-                logoutBtn.disabled = false;
-
-                logoutBtn.innerHTML =
-                    originalText;
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-function setupNotifications() {
-
-    if (!notificationBtn) {
-        return;
+        }, 3000);
     }
 
 
-    notificationBtn.addEventListener(
-        "click",
-        () => {
+    /* =====================================================
+       LOGOUT MESSAGE
+       ===================================================== */
 
-            if (userNotifications.length === 0) {
+    function showLogoutMessage() {
 
-                showToast(
-                    "You have no new notifications.",
-                    "info"
+        const container = createToastContainer();
+
+        if (toastTimer) {
+            clearTimeout(toastTimer);
+        }
+
+        container.innerHTML = "";
+
+        const toast = document.createElement("div");
+
+        toast.style.minWidth = "280px";
+        toast.style.maxWidth = "90vw";
+        toast.style.padding = "16px 20px";
+        toast.style.borderRadius = "14px";
+        toast.style.background = "#111827";
+        toast.style.color = "#ffffff";
+        toast.style.boxShadow =
+            "0 15px 40px rgba(0,0,0,0.25)";
+        toast.style.textAlign = "center";
+        toast.style.fontSize = "14px";
+        toast.style.fontWeight = "600";
+
+        toast.innerHTML = `
+            <div
+                style="
+                    font-size:24px;
+                    margin-bottom:6px;
+                "
+            >
+                ✓
+            </div>
+
+            <div>
+                Logging you out...
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+
+            logoutUser();
+
+        }, 700);
+    }
+
+
+    /* =====================================================
+       LOGOUT USER
+       ===================================================== */
+
+    async function logoutUser() {
+
+        try {
+
+            /*
+             * Support the Supabase client already
+             * created by the dashboard.
+             */
+
+            let client = null;
+
+            if (
+                typeof window.supabaseClient !== "undefined"
+            ) {
+                client = window.supabaseClient;
+            }
+
+            else if (
+                typeof window.nexusSupabase !== "undefined"
+            ) {
+                client = window.nexusSupabase;
+            }
+
+            /*
+             * If your dashboard exposes the Supabase
+             * client under another name, try the common
+             * global object safely.
+             */
+
+            if (
+                !client &&
+                window.supabase &&
+                typeof window.supabase.auth !== "undefined"
+            ) {
+                client = window.supabase;
+            }
+
+
+            if (client && client.auth) {
+
+                const { error } =
+                    await client.auth.signOut();
+
+                if (error) {
+                    console.error(
+                        "Nexus logout error:",
+                        error
+                    );
+                }
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Nexus logout failed:",
+                error
+            );
+
+        }
+
+        finally {
+
+            /*
+             * Clear local Nexus session information.
+             */
+
+            try {
+                localStorage.removeItem(
+                    "nexusUser"
                 );
 
-                return;
+                localStorage.removeItem(
+                    "nexus_user"
+                );
+
+                localStorage.removeItem(
+                    "nexusSession"
+                );
+
+                sessionStorage.removeItem(
+                    "nexusUser"
+                );
+
+                sessionStorage.removeItem(
+                    "nexus_user"
+                );
+
+                sessionStorage.removeItem(
+                    "nexusSession"
+                );
+
+            }
+
+            catch (storageError) {
+
+                console.warn(
+                    "Could not clear local session:",
+                    storageError
+                );
 
             }
 
 
-            showToast(
-                `You have ${userNotifications.length} notification${userNotifications.length === 1 ? "" : "s"}.`,
-                "info"
-            );
+            /*
+             * Return to Nexus login page.
+             */
 
+            window.location.href =
+                LOGIN_PAGE;
         }
-    );
-
-}
+    }
 
 
-/* =========================================================
-   QUICK ACTIONS
-========================================================= */
+    /* =====================================================
+       GET BUTTON NAME
+       ===================================================== */
 
-function setupQuickActions() {
+    function getElementName(element) {
 
-    const actionIds = [
+        if (!element) {
+            return "This feature";
+        }
 
-        "quickExploreCourses",
+        const aria =
+            element.getAttribute("aria-label");
 
-        "quickQuiz",
+        if (aria) {
+            return aria;
+        }
 
-        "quickBookmarks",
+        const title =
+            element.getAttribute("title");
 
-        "browseCoursesBtn",
+        if (title) {
+            return title;
+        }
 
-        "viewCoursesBtn",
+        const text =
+            element.textContent
+                .replace(/\s+/g, " ")
+                .trim();
 
-        "viewBookmarksBtn",
+        if (text) {
+            return text;
+        }
 
-        "emptyExploreBtn"
+        return "This feature";
+    }
 
-    ];
+
+    /* =====================================================
+       CHECK IF ELEMENT IS LOGOUT
+       ===================================================== */
+
+    function isLogoutElement(element) {
+
+        if (!element) {
+            return false;
+        }
+
+        const id =
+            (element.id || "").toLowerCase();
+
+        const className =
+            typeof element.className === "string"
+                ? element.className.toLowerCase()
+                : "";
+
+        const text =
+            (element.textContent || "")
+                .trim()
+                .toLowerCase();
+
+        const dataAction =
+            (
+                element.getAttribute(
+                    "data-action"
+                ) || ""
+            ).toLowerCase();
 
 
-    actionIds.forEach((id) => {
+        if (id === "logoutbtn") {
+            return true;
+        }
+
+        if (id === "logout-btn") {
+            return true;
+        }
+
+        if (id === "logout") {
+            return true;
+        }
+
+        if (className.includes("logout")) {
+            return true;
+        }
+
+        if (dataAction === "logout") {
+            return true;
+        }
+
+        if (text === "logout") {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /* =====================================================
+       HANDLE DASHBOARD CLICK
+       ===================================================== */
+
+    function handleDashboardClick(event) {
 
         const element =
-            document.getElementById(id);
-
+            event.target.closest(
+                "button, a, [role='button']"
+            );
 
         if (!element) {
             return;
         }
 
 
-        element.addEventListener(
-            "click",
-            (event) => {
+        /*
+         * LOGOUT
+         */
 
-                event.preventDefault();
+        if (isLogoutElement(element)) {
 
+            event.preventDefault();
+            event.stopPropagation();
 
-                if (
-                    id === "quickQuiz"
-                ) {
-
-                    showToast(
-                        "Quiz section will open here.",
-                        "info"
-                    );
-
-                }
-
-                else if (
-                    id === "quickBookmarks" ||
-                    id === "viewBookmarksBtn"
-                ) {
-
-                    showToast(
-                        "Bookmarks section will open here.",
-                        "info"
-                    );
-
-                }
-
-                else {
-
-                    showToast(
-                        "Course Explorer will open here.",
-                        "info"
-                    );
-
-                }
-
-            }
-        );
-
-    });
-
-}
-
-
-/* =========================================================
-   MARQUEE
-========================================================= */
-
-function setupMarquee() {
-
-    const marquee =
-        document.getElementById("nexusMarquee");
-
-
-    if (!marquee) {
-        return;
-    }
-
-
-    marquee.classList.add("running");
-
-
-    const track =
-        marquee.querySelector(".marquee-track");
-
-
-    if (!track) {
-        return;
-    }
-
-
-    track.style.display = "flex";
-
-    track.style.width = "max-content";
-
-    track.style.animation =
-        "nexusMarqueeMove 18s linear infinite";
-
-
-    const styleId =
-        "nexus-marquee-runtime-style";
-
-
-    if (!document.getElementById(styleId)) {
-
-        const style =
-            document.createElement("style");
-
-
-        style.id = styleId;
-
-
-        style.textContent = `
-            @keyframes nexusMarqueeMove {
-                from {
-                    transform: translateX(0);
-                }
-
-                to {
-                    transform: translateX(-50%);
-                }
-            }
-
-            .nexus-marquee {
-                width: 100%;
-                overflow: hidden;
-            }
-
-            .marquee-track {
-                display: flex;
-                width: max-content;
-                white-space: nowrap;
-            }
-
-            .marquee-text {
-                flex-shrink: 0;
-                padding-right: 60px;
-            }
-        `;
-
-
-        document.head.appendChild(style);
-
-    }
-
-}
-
-
-/* =========================================================
-   DASHBOARD LOADER
-========================================================= */
-
-async function loadDashboard() {
-
-    try {
-
-        console.log(
-            "Nexus: checking session..."
-        );
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.getSession();
-
-
-        if (error) {
-
-            console.error(
-                "Session error:",
-                error
-            );
-
-            redirectToLogin();
+            showLogoutMessage();
 
             return;
-
         }
 
 
-        if (
-            !data ||
-            !data.session ||
-            !data.session.user
-        ) {
+        /*
+         * Everything else is currently
+         * Coming Soon.
+         */
 
-            console.warn(
-                "No active Nexus session."
-            );
+        event.preventDefault();
+        event.stopPropagation();
 
-            redirectToLogin();
+        const name =
+            getElementName(element);
 
-            return;
-
-        }
-
-
-        currentUser =
-            data.session.user;
-
-
-        console.log(
-            "Nexus user connected:",
-            currentUser.id
+        showComingSoon(
+            `${name} is currently being prepared for Nexus.`
         );
-
-
-        await loadProfile();
-
-        await loadDashboardData();
-
-        renderUser();
-
-        renderStatistics();
-
-        renderProgress();
-
-        renderContinueLearning();
-
-        renderRecentActivity();
-
-        renderBookmarks();
-
-        renderNotifications();
-
-
-        console.log(
-            "Nexus dashboard loaded successfully."
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Dashboard startup error:",
-            error
-        );
-
-
-        showToast(
-            "Dashboard could not finish loading.",
-            "error"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-async function loadProfile() {
-
-    if (!currentUser) {
-        return;
     }
 
 
-    try {
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-                .from("profiles")
-                .select("*")
-                .eq(
-                    "id",
-                    currentUser.id
-                )
-                .maybeSingle();
-
-
-        if (error) {
-
-            console.error(
-                "Profile query error:",
-                error
-            );
-
-            currentProfile = null;
-
-            return;
-
-        }
-
-
-        currentProfile =
-            data || null;
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Profile exception:",
-            error
-        );
-
-        currentProfile = null;
-
-    }
-
-}
-
-
-/* =========================================================
-   LOAD DASHBOARD DATA
-========================================================= */
-
-async function loadDashboardData() {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    try {
-
-        const [
-            enrollmentsRes,
-            progressRes,
-            quizRes,
-            bookmarksRes,
-            notificationsRes
-        ] =
-            await Promise.all([
-
-                supabaseClient
-                    .from("enrollments")
-                    .select("*")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    ),
-
-                supabaseClient
-                    .from("lesson_progress")
-                    .select("*")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    ),
-
-                supabaseClient
-                    .from("quiz_attempts")
-                    .select("*")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    ),
-
-                supabaseClient
-                    .from("bookmarks")
-                    .select("*")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    ),
-
-                supabaseClient
-                    .from("notifications")
-                    .select("*")
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    )
-                    .order(
-                        "created_at",
-                        {
-                            ascending: false
-                        }
-                    )
-
-            ]);
-
-
-        if (enrollmentsRes.error) {
-
-            console.error(
-                "Enrollments error:",
-                enrollmentsRes.error
-            );
-
-        }
-
-
-        if (progressRes.error) {
-
-            console.error(
-                "Lesson progress error:",
-                progressRes.error
-            );
-
-        }
-
-
-        if (quizRes.error) {
-
-            console.error(
-                "Quiz attempts error:",
-                quizRes.error
-            );
-
-        }
-
-
-        if (bookmarksRes.error) {
-
-            console.error(
-                "Bookmarks error:",
-                bookmarksRes.error
-            );
-
-        }
-
-
-        if (notificationsRes.error) {
-
-            console.error(
-                "Notifications error:",
-                notificationsRes.error
-            );
-
-        }
-
-
-        userEnrollments =
-            enrollmentsRes.data || [];
-
-
-        userLessonProgress =
-            progressRes.data || [];
-
-
-        userQuizAttempts =
-            quizRes.data || [];
-
-
-        userBookmarks =
-            bookmarksRes.data || [];
-
-
-        userNotifications =
-            notificationsRes.data || [];
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Dashboard data fetching error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER USER
-========================================================= */
-
-function renderUser() {
-
-    if (!currentUser) {
-        return;
-    }
-
-
-    const metadata =
-        currentUser.user_metadata || {};
-
-
-    const fullName =
-
-        currentProfile?.full_name ||
-
-        metadata.full_name ||
-
-        metadata.name ||
-
-        (
-            currentUser.email
-                ? currentUser.email.split("@")[0]
-                : "Nexus User"
-        );
-
-
-    const role =
-        currentProfile?.role ||
-        "student";
-
-
-    if (headerUserName) {
-
-        headerUserName.textContent =
-            fullName;
-
-    }
-
-
-    if (headerUserRole) {
-
-        headerUserRole.textContent =
-            String(role).toUpperCase();
-
-    }
-
-
-    if (welcomeTitle) {
-
-        const firstName =
-            fullName.trim().split(/\s+/)[0];
-
-
-        welcomeTitle.textContent =
-            `Welcome back, ${firstName}! 👋`;
-
-    }
-
-
-    if (userAvatar) {
-
-        userAvatar.textContent =
-            fullName
-                .trim()
-                .charAt(0)
-                .toUpperCase() || "U";
-
-    }
-
-}
-
-
-/* =========================================================
-   STATISTICS
-========================================================= */
-
-function renderStatistics() {
-
-    const enrolled =
-        userEnrollments.length;
-
-
-    const completed =
-        userEnrollments.filter(
-            (course) =>
-                course.status === "completed"
-        ).length;
-
-
-    const attempts =
-        userQuizAttempts.length;
-
-
-    if (enrolledCourses) {
-
-        enrolledCourses.textContent =
-            enrolled;
-
-    }
-
-
-    if (completedCourses) {
-
-        completedCourses.textContent =
-            completed;
-
-    }
-
-
-    if (quizAttempts) {
-
-        quizAttempts.textContent =
-            attempts;
-
-    }
-
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function renderProgress() {
-
-    const totalEnrolled =
-        userEnrollments.length;
-
-
-    const completedLessonCount =
-        userLessonProgress.filter(
-            (progress) =>
-                progress.completed === true
-        ).length;
-
-
-    const totalQuizAttempts =
-        userQuizAttempts.length;
-
-
-    let totalProgress = 0;
-
-
-    if (totalEnrolled > 0) {
-
-        const sum =
-            userEnrollments.reduce(
-                (total, course) => {
-
-                    const value =
-                        Number(
-                            course.progress_percent ??
-                            course.progress ??
-                            0
-                        );
-
-
-                    return total + value;
+    /* =====================================================
+       GLOBAL DASHBOARD CLICK LISTENER
+       ===================================================== */
+
+    document.addEventListener(
+        "click",
+        handleDashboardClick,
+        true
+    );
+
+
+    /* =====================================================
+       PREVENT EMPTY / PLACEHOLDER LINKS
+       ===================================================== */
+
+    document
+        .querySelectorAll(
+            "a[href='#'], a[href='javascript:void(0)']"
+        )
+        .forEach((link) => {
+
+            link.addEventListener(
+                "click",
+                (event) => {
+
+                    event.preventDefault();
 
                 },
-                0
+                true
             );
 
-
-        totalProgress =
-            Math.round(
-                sum / totalEnrolled
-            );
-
-    }
+        });
 
 
-    if (progressCourses) {
+    /* =====================================================
+       DASHBOARD INITIALIZATION
+       ===================================================== */
 
-        progressCourses.textContent =
-            totalEnrolled;
+    console.log(
+        "Nexus Dashboard: button system initialized."
+    );
 
-    }
-
-
-    if (completedLessons) {
-
-        completedLessons.textContent =
-            completedLessonCount;
-
-    }
-
-
-    if (progressQuizzes) {
-
-        progressQuizzes.textContent =
-            totalQuiz
+});
